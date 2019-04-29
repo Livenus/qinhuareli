@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+
+    <title>后台管理</title>
+
+    <meta name="keywords" content="省付吧后台">
+    <meta name="description" content="省付吧后台">
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+
+    <link rel="shortcut icon" href="favicon.ico"> 
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/yysweb.css" rel="stylesheet">
+    <!-- Sweet Alert -->
+    <!-- <link href="/static/css/plugins/sweetalert/sweetalert.css" rel="stylesheet"> -->
+    <!-- 全局js -->
+    <!-- <script src="/static/js/jquery.min.js"></script> -->
+    <!-- <script src="/static/js/bootstrap.min.js"></script> -->
+    <!-- Sweet alert -->
+    <!-- <script src="/static/js/plugins/sweetalert/sweetalert.min.js"></script> -->
+    <!-- 自定义js -->
+    <!-- <script src="https://cdn.bootcss.com/layer/3.1.0/layer.js"></script> -->
+    <!-- <link href="https://cdn.bootcss.com/layer/3.1.0/theme/default/layer.css" rel="stylesheet"> -->
+    <!-- <script src="/static/js/content.js?v=1.0.0"></script> -->
+
+<script src="/static/js/require.js"></script>
+<script src="/static/js/requireconfig.js"></script>
+<script>
+
+</script>
+
+     <style>
+         body{
+        background: #f3f3f4;
+    }
+    </style>
+</head>
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title" style=" padding-bottom: 0;">
+      
+            </div>
+            <div class="ibox-content">
+
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <!-- Example Events -->
+                        <div class="example-wrap">
+                            <div class="example">
+                                <table id="dg" data-height="100%" data-mobile-responsive="true">
+                                </table>
+                            </div>
+                        </div>
+                        <!-- End Example Events -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+
+require(['bootstrap-table','layer'],function(a, layer){
+	var data = JSON.parse('<{$auth_list|json_encode}>'),_data=[];
+	$.each(data, function(k, v){
+		_data.push(v);
+	});
+	data = _data;
+	
+	
+	//表格=========================================
+	$('#dg').bootstrapTable({
+	    //url:'http://phpcodemaker.com/index.php?s=j/server/list&name=1&age_o=asc&id_o=asc',
+	    //method:'post',
+	    //queryParamsType: "limit",
+	    //queryParams:function(params){
+	    //    params.p = parseInt(params.offset/params.limit)+1;
+	    //    params = $.extend(params, getQueryParams());
+	    //    return params;
+	    //},
+	    //contentType: 'application/json',
+	    //dataType: 'json',
+	    //sidePagination: "server", //表示服务端请求
+	    //pagination: true, //启动分页
+	    pageNumber: 1, //当前第几页
+	    pageSize: 20, //每页显示的记录数
+	    //pageList: [10, 15, 20], //记录数可选列表
+	    data:data,
+	    dataField: 'rows',
+	    idField: "id",
+	    columns:[
+	        {checkbox: true,align: 'center', valign: 'middle'},
+	        {title: "#",field:"id",align: "center",valign:"middle"},
+	        {title: "项目标题",field:"title",align: "center",valign:"middle"},
+            {title: "开发环境域名",field:"url_develop",align: "center",valign:"middle"},
+	        {title: "是否允许被搜索到",field:"allow_search",align: "center",valign:"middle"},
+	        {title:"操作",field: "n_do",align: "center",valign: "middle",formatter:function(value,row,index){
+	        	return '<a href="javascript:auth('+row.id+');" class="btn btn-primary" title=""><span class="glyphicon glyphicon-trash"></span>分配权限</a>';
+	        	}
+	        }
+	        ],
+	    responseHandler:function(res){
+	      //远程数据加载之前,处理程序响应数据格式,对象包含的参数: 我们可以对返回的数据格式进行处理
+	      //在ajax后我们可以在这里进行一些事件的处理
+	      return res;
+	    }
+
+	});
+});
+
+	auth = function(id){
+		var url = '/index.php/apidoc/admin_proj/authEdit/id/' + id;
+		layer.open({
+            type: 2,
+            title: '修改',
+            // closeBtn: 0, //不显示关闭按钮
+            shade: [0.5],
+            area: ['90%', '90%'],
+            // offset: 'rb', //右下角弹出
+//            time: 2000, //2秒后自动关闭
+             anim: 2,
+             shift:2,
+             maxmin: true, //开启最大化最小化按钮
+            content: [url], //iframe的url，no代表不显示滚动条
+            success:function(layero, index){
+              
+            },
+            end: function(){ //此处用于演示
+              
+            }
+          });
+	}
+
+</script>
+
+</body>
+</html>  

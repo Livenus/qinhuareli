@@ -1,0 +1,293 @@
+<{include file="jhy@public/header"}>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title" style=" padding-bottom: 0;">
+            </div>
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <!-- Example Events -->
+                        <div class="example-wrap">
+                            <div class="example">
+                                <div class="hidden-xs" id="exampleTableEventsToolbar" role="group">
+                                    <button type="button" class="btn btn-primary" onclick="add('','/index.php?s=qhrlwx/admin_user/add')">
+                                        <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>新增
+                                    </button> 
+                                </div>
+                                <!---search start-->
+                                <div class="right">
+                                    <form class="form-inline" id="search_from1" onsubmit='return false'>
+                                        <div class="form-group ">
+                                            <input placeholder="用户名" class="form-control" name="username">
+                                        </div>
+                                        <div class="form-group ">
+                                            <input placeholder="昵称" class="form-control" name="nickname">
+                                        </div>
+                                        <div class="form-group ">
+                                            <input placeholder="手机号" class="form-control" name="mobile">
+                                        </div>
+                                        <div class="form-group ">
+                                            <select class="form-control" name="area_1" id="area_1">
+                                                <option  value="">==请选择地区==</option>
+                                                <{volist name="area_1list" id="vo"}>
+                                                    <option  value="<{$vo['id']}>" <{if condition="$vo['id'] eq $area_1"}>selected<{/if}>><{$vo['name']}></option>
+                                                <{/volist}>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="form-control" name="area_2" id="area_2">
+                                                <option  value="">==请选择地区==</option>
+                                                <{volist name="area_2list" id="vo"}>
+                                                    <option  value="<{$vo['id']}>" <{if condition="$vo['id'] eq $area_2"}>selected<{/if}>><{$vo['name']}></option>
+                                                <{/volist}>
+                                            </select>
+                                        </div>
+                                        <div class="form-group ">
+                                            <select class="form-control" name="area_3" id="area_3">
+                                                <option  value="">==请选择地区==</option>
+                                                <{volist name="area_3list" id="vo"}>
+                                                    <option  value="<{$vo['id']}>"  <{if condition="$vo['id'] eq $area_3"}>selected<{/if}>><{$vo['name']}></option>
+                                                <{/volist}>
+                                            </select>
+                                        </div>
+                                        <div class="form-group ">
+                                            <select class="form-control" name="community_id" id="area_4">
+                                                <option  value="">==维修小区==</option>
+                                                <{volist name="area_4list" id="vo"}>
+                                                    <option  value="<{$vo['id']}>"><{$vo['name']}></option>
+                                                <{/volist}>
+                                            </select>
+                                        </div>
+                                        <div class="form-group ">
+                                            <select class="form-control" name="group_id">
+                                                <option  value="">==用户类型==</option>
+                                                <{volist name="groups" id="vo" key="k"}>
+                                                    <option  value="<{$k}>"><{$vo}></option>
+                                                <{/volist}>
+                                            </select>
+                                        </div>
+                                        <a href="javascript:list_search();" class="btn btn-primary btn-sm">搜索</a>
+                                    </form>
+                                </div>
+
+                                <!---search end---->
+                                <table id="dg" data-height="100%" data-mobile-responsive="true">
+                                </table>
+                            </div>
+                        </div>
+                        <!-- End Example Events -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        var del,edit,add,getQueryParams;
+        var iframdeindex, iframefinish;
+        require(['bootstrap-table','layer'],function(a, layer){
+            
+            //删除====================================
+            del = function(id, url){
+                layer.confirm('确认删除？', {
+                  btn: ['确认','取消'] //按钮
+                }, function(){
+                    layer.msg('删除中#'+id+'..', {icon: 1});
+                    $.ajax({
+                        url:url + '/id/' + id,
+                        type:'get',
+                        dataType:'json',
+                        success:function(d){
+                            console.log(d)
+                            if(d.code == 1){
+                                setTimeout(function(){list_search();},(d.wait?d.wait:2)*1000);    
+                            }else{
+                                layer.msg( (d.msg?d.msg:'服务器暂时无法连接...'), {icon: 2});
+                            }
+
+                        },
+                        error:function(d){
+                            layer.msg('服务器暂时无法连接...', {icon: 2});
+                        }
+                    });
+                });
+            },
+
+            //编辑==================================
+            edit=function(id,url){
+                if(!id){
+                    layer.msg('页面出错了...',{icon:2});
+                }
+
+                //iframe窗
+                iframdeindex = layer.open({
+                  type: 2,
+                  title: '修改',
+                  // closeBtn: 0, //不显示关闭按钮
+                  shade: [0.5],
+                  area: ['90%', '90%'],
+                  // offset: 'rb', //右下角弹出
+//                  time: 2000, //2秒后自动关闭
+                   anim: 2,
+                   shift:2,
+                   maxmin: true, //开启最大化最小化按钮
+                  content: [url + '/id/' + id], //iframe的url，no代表不显示滚动条
+                  success:function(layero, index){
+
+                  },
+
+                  end: function(){ //此处用于演示
+
+                  }
+                });
+            },
+
+            //添加=======================================
+            add = function(un, url){
+                if(un) url = url + '/pid/' + un;                  
+                layer.open({
+                  type: 2,
+                  title: '新增',
+                  shade: [0.5],
+                  area: ['90%', '90%'],
+                  content: [url], //iframe的url，no代表不显示滚动条
+                  end: function(){ //此处用于演示
+
+                  }
+                });
+            },
+
+            list_search = function(){
+                q = getQueryParams();
+                $("#dg").bootstrapTable('refresh', {url: "/index.php/qhrlwx/admin_user/list.html",query:q}); 
+            },
+
+            getQueryParams = function(){
+                var _params = $('#search_from1').serializeArray();
+                var params={};
+                $.each(_params, function(k, v){
+                    params[v.name]=v.value;
+                });
+                return params;
+            },
+
+            //关闭IFRAME刷新本页面数据
+            iframefinish = function(){
+                layer.closeAll('iframe');
+                list_search();
+            }
+
+            //表格=========================================
+            $('#dg').bootstrapTable({
+                url:'/index.php/qhrlwx/admin_user/list.html',
+                method:'post',
+                queryParamsType: "limit",
+                queryParams:function(params){
+                    params.p = parseInt(params.offset/params.limit)+1;
+                    params = $.extend(params, getQueryParams());
+                    return params;
+                },
+
+                contentType: 'application/json',
+                dataType: 'json',
+                sidePagination: "server", //表示服务端请求
+                pagination: true, //启动分页
+                pageNumber: 1, //当前第几页
+                pageSize: 20, //每页显示的记录数
+                pageList: [10, 15, 20], //记录数可选列表
+                dataField: 'rows',
+                idField: "id",
+                columns:[
+
+                    {checkbox: true,align: 'center', valign: 'middle'},
+
+                    {title: "登录用户名",field:"username",align: "center",valign:"middle"},
+                    {title: "昵称",field:"nickname",align: "center",valign:"middle"},
+                    {title: "用户类型",field:"group",align: "center",valign:"middle"},
+                    {title: "电子邮箱",field:"email",align: "center",valign:"middle"},
+                    {title: "手机号码",field:"mobile",align: "center",valign:"middle"},
+                    {title: "注册时间",field:"create_time",align: "center",valign:"middle"},
+                    {title: "性别",field:"gender",align: "center",valign:"middle"},
+                    {title: "允许登录",field:"stat",align: "center",valign:"middle"},
+                    {title: "维修小区列表",field:"repair_list",align: "center",valign:"middle"},
+                    
+                    {title:"操作",field: "n_do",align: "center",valign: "middle",formatter:function(value,row,index){
+                        return '<a href="javascript:edit(\''+row.id+'\',\'/index.php?s=qhrlwx/admin_user/edit\');" class="btn btn-warning" title="修改"><span class="glyphicon glyphicon-edit"></span>修改</a> '
+                            +  '<a href="javascript:del(\''+row.id+'\',\'/index.php?s=qhrlwx/admin_user/del\')" class="btn btn-warning" data-toggle="tooltip" title="删除"><span class="glyphicon glyphicon-remove"></span> 删除</a>';}}
+                    ],
+
+                responseHandler:function(res){
+                  //远程数据加载之前,处理程序响应数据格式,对象包含的参数: 我们可以对返回的数据格式进行处理
+                  //在ajax后我们可以在这里进行一些事件的处理
+                  return res;
+                }
+
+            });
+
+        });
+        
+    </script>
+    <script type="text/javascript">
+        require(['bootstrap' ,'validate', 'layer'],function($, $1, layer){
+            var loading;
+            $ = $.extend($, $1);
+            $(document).ready(function(){
+                for (var i = 0; i < 3; i++) {
+                    var j = parseInt(i) + parseInt(1);
+                    $('#area_'+j).change(function(){
+                        getList(this);
+                    });
+                }
+            });
+
+            function getList(e){
+                var area = e.id;
+                var val = $("#"+area+" option:selected").val();
+                var id = area.split('_')[1];
+
+                if(id == 1 || id == 2 || id == 3){
+                    $.ajax({
+                        url:"/index.php/qhrlwx/admin_user/getAreaList.html",
+                        type:'post',
+                        cache:false,
+                        data:{area_id:val,type:id},
+                        dataType:'json',
+                        success:function(data){
+                            console.log(data);
+                            if(data.code != 1){
+                                layer.msg(data.msg?data.msg:'出错了',{icon:2});
+                            }else{
+                                var s_id = parseInt(id) + parseInt(1);
+                                $("#area_"+s_id).html('');
+                                if(s_id == 2){
+                                    $("#area_3").html('');
+                                    $("#area_4").html('');
+                                    $("#area_3").html('<option  value="">==请选择地区==</option>');
+                                    $("#area_4").html('<option  value="">==请选择地区==</option>');
+                                }else if(s_id == 3){
+                                    console.log(444);
+                                    $("#area_4").html('');
+                                    $("#area_4").html('<option  value="">==请选择地区==</option>');
+                                }
+                                var html = '';
+                                html += '<option  value="">==请选择地区==</option>';
+                                if(data.data != false){
+                                    $.each(data.data,function(k,v){
+                                        html += '<option  value="'+v.id+'">'+v.name+'</option>';
+                                    });
+                                }
+                                
+                                $("#area_"+s_id).html(html);
+
+                            }
+
+                        },
+                       
+                    });
+                }
+                
+            }
+
+        });
+    </script>
+<{include file="jhy@public/footer"}>    

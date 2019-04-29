@@ -1,0 +1,94 @@
+<{include file="jhy@Public/header"}>
+<!-- 头部结束 -->
+    
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="tabs-container ibox-title">
+                    <ul class="nav nav-tabs ">
+                       
+                    </ul>
+                    <div class="ibox-content">
+                        <div class="">
+                            <form class="form-horizontal" id="formid1" action="" method='post'>
+                               <div class="panel-heading">
+                                    新增目录                                </div> 
+<div class="">
+<div class="form-group " id="text_5">
+    <div class="col-sm-2 control-label">目录名称:</div>
+    <div class="col-sm-4">
+        <input  type="text" class="form-control" value="<{$dirinfo['title']}>" name="title" >
+        <span class="help-block m-b-none"></span>
+    </div>
+</div>     
+<div class="form-group " id="text_5">
+    <div class="col-sm-2 control-label">排序:</div>
+    <div class="col-sm-4">
+        <input type="number" class="form-control" value="<{$dirinfo['sort']}>" name="sort" >
+        <span class="help-block m-b-none"></span>
+    </div>
+</div>     
+
+<div class="form-group">
+         <div class="col-sm-4 col-sm-offset-2">
+             <a href="javascript:;" id="submitid1" class="btn btn-warning btnbottom" data-loading-text="加载中...">立即保存</a>
+         </div>
+     </div>
+ </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    require(['bootstrap' ,'validate', 'layer'],function($, $1, layer){
+        var loading;
+        $ = $.extend($, $1);
+        $1('#formid1').validate({
+            submitHandler:function(form){
+                $.ajax({
+                    url:"",
+                    type:'post',
+                    cache:false,
+                    data:$(form).serialize(),
+                    dataType:'json',
+                    beforeSend:function(XMLHttpRequest){
+                        $("#submitid1").addClass('disabled');
+                        $("#submitid1").button('loading');
+                        loading = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+
+                    },
+                    complete:function(XMLHttpRequest, textStatus){
+                        $("#submitid1").removeClass('disabled');
+                        $("#submitid1").button('reset');
+                        layer.close(loading);
+                    },
+                    success:function(data,textStatus){
+                    	if(data.code == '1'){
+		                    layer.msg('success!!', {icon: 1});
+	                        setTimeout(function(){
+	                            top.window.location.reload();
+	                        },2000);
+                    	}else{
+                    		layer.msg(data.msg?data.msg:'出错了',{icon:2});
+                    	}
+                    },
+                    error:function(XMLHttpRequest, textStatus, errorThrown){
+                        if(XMLHttpRequest.status == 404){
+                            alert('404');
+                        }
+                    }
+                });
+            }
+        });
+
+        $("#submitid1").click(function(){
+            $("#formid1").submit();
+        });
+    });
+</script>
+
+<{include file="jhy@Public/footer"}>

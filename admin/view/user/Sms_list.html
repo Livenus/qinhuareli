@@ -1,0 +1,154 @@
+<{include file="public/header"}>
+<div class="ibox float-e-margins">
+     <div class="ibox-title">
+         <h5>短信配置</h5>
+         <div class="ibox-tools">
+         <!-- 
+             <a class="collapse-link">
+                 <i class="fa fa-chevron-up"></i>
+             </a>
+             <a class="dropdown-toggle" data-toggle="dropdown" href="tabs_panels.html#">
+                 <i class="fa fa-wrench"></i>
+             </a>
+             <ul class="dropdown-menu dropdown-user">
+                 <li><a href="tabs_panels.html#">选项1</a>
+                 </li>
+                 <li><a href="tabs_panels.html#">选项2</a>
+                 </li>
+             </ul>
+             <a class="close-link">
+                 <i class="fa fa-times"></i>
+             </a>
+             -->
+         </div>
+     </div>
+     <div class="ibox-content">
+         <div class="panel-body">
+             <div class="panel-group" id="accordion">
+             <{volist name='smslist' id="vo"}>
+                 <div class="panel panel-default">
+                     <div class="panel-heading">
+                         <h5 class="panel-title">
+                         	<label><input class="i-checks" type="radio" name="smstype" value="<{$vo.en_name}>" <{if condition="$vo['dbconfig']['is_open']==1 "}>checked<{/if}> />使用</label>
+                            <a data-toggle="collapse" data-parent="#accordion" href="tabs_panels.html#collapseOne" aria-expanded="false" class="collapsed">
+                            <{$vo.title}>
+                            </a>
+                         </h5>
+                     </div>
+                     <div id="collapseOne" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                         <div class="panel-body">
+                             <form class="form-horizontal" id="form_<{$vo.en_name}>">
+                             	<input type="hidden" name="en_name" value="<{$vo.en_name}>" />
+                             	<{$vo.confightml}>
+                             	<div class="col-sm-2 col-sm-offset-2"><a class="btn btn-primary" onclick="saveconfig('<{$vo.en_name}>')" id="button_<{$vo.en_name}>">保存</a></div>
+                             </form>
+                         </div>
+                     </div>
+                 </div>
+          	 <{/volist}>
+                
+             </div>
+             <a class="btn btn-primary" onclick="saveselect(this)">保存所选短信服务</a>
+         </div>
+     </div>
+</div>
+<script>
+
+require(['bootstrap','layer', 'icheck'], function($, layer){
+	$('.i-checks').iCheck({
+		checkboxClass:'icheckbox_square-green',
+		radioClass:'iradio_square-green'
+	});
+	
+	saveconfig = function(en_name){
+		var $form = $('#form_' + en_name),
+		$submit = $("#button_" + en_name);
+        $.ajax({
+               url: "<{:url('admin/sms/setconfig')}>",
+               type:'post',
+               cache:false,
+               data:$form.serialize(),
+               dataType:'json',
+               beforeSend:function(XMLHttpRequest){
+                   $submit.addClass('disabled');
+                   $submit.button('loading');
+                   loading = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+
+               },
+               complete:function(XMLHttpRequest, textStatus){
+                   $submit.removeClass('disabled');
+                   $submit.button('reset');
+                   layer.close(loading);
+               },
+               success:function(data,textStatus){
+                   layer.msg('success!!', {icon: 1});
+                   setTimeout(function(){
+                       if(top.window != window){
+                           if(typeof parent.window.iframefinish == 'function'){
+                               parent.window.iframefinish()
+                           }else if(typeof top.window.iframefinish == 'function'){
+                               parent.window.iframefinish()
+                           }
+                           
+                       }
+                   },2000);
+               },
+               error:function(XMLHttpRequest, textStatus, errorThrown){
+                   if(XMLHttpRequest.status == 404){
+                       alert('404');
+                   }
+               }
+        });
+	}
+	
+	saveselect = function(t){
+		$submit = $(t);
+        $.ajax({
+            url: "<{:url('admin/sms/select')}>",
+            type:'post',
+            cache:false,
+            data:{
+            	smstype:$('input[name="smstype"]:checked').val()
+            },
+            dataType:'json',
+            beforeSend:function(XMLHttpRequest){
+                $submit.addClass('disabled');
+                $submit.button('loading');
+                loading = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+
+            },
+            complete:function(XMLHttpRequest, textStatus){
+                $submit.removeClass('disabled');
+                $submit.button('reset');
+                layer.close(loading);
+            },
+            success:function(data,textStatus){
+                layer.msg('success!!', {icon: 1});
+                setTimeout(function(){
+                    if(top.window != window){
+                        if(typeof parent.window.iframefinish == 'function'){
+                            parent.window.iframefinish()
+                        }else if(typeof top.window.iframefinish == 'function'){
+                            parent.window.iframefinish()
+                        }
+                        
+                    }
+                },2000);
+            },
+            error:function(XMLHttpRequest, textStatus, errorThrown){
+                if(XMLHttpRequest.status == 404){
+                    alert('404');
+                }
+            }
+     });
+		
+		
+		
+	}
+	
+	
+});
+
+</script>
+
+<{include file="public/footer"}>

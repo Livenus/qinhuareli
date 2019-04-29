@@ -1,0 +1,300 @@
+<{include file="jhy@public/header"}>
+<div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="tabs-container ibox-title">
+                    <ul class="nav nav-tabs ">
+
+                    </ul>
+                    <div class="ibox-content">
+                        <div class="">
+
+                            <form class="form-horizontal" id="formid1" action="" method='post'>
+                               <div class="panel-heading">增加房屋</div> 
+                                <div class="">
+                                    
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label"><b style="color:#ff0000">(*)</b>户主姓名:</div>
+                                        <div class="col-sm-4">
+                                            <input id="text_1_input1" placeholder="请输入户主姓名" class="form-control" value="<{$info['householder']}>" name="householder">
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label"><b style="color:#ff0000">(*)</b>户主联系电话:</div>
+                                        <div class="col-sm-4">
+                                            <input id="text_2_input1" placeholder="请输入户主联系电话" class="form-control" value="<{$info['tel']}>" name="tel">
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label">省级地区:</div>
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="area_1" id="area_1">
+                                                <option  value="">==请选择地区==</option>
+                                                <{volist name="area_1list" id="vo"}>
+                                                    <option  value="<{$vo['id']}>" <{if condition="$vo['id'] eq $area_1"}>selected<{/if}>><{$vo['name']}></option>
+                                                <{/volist}>
+                                            </select>
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label">市级地区:</div>
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="area_2" id="area_2">
+                                                <option  value="">==请选择地区==</option>
+                                                <{volist name="area_2list" id="vo"}>
+                                                    <option  value="<{$vo['id']}>" <{if condition="$vo['id'] eq $area_2"}>selected<{/if}>><{$vo['name']}></option>
+                                                <{/volist}>
+                                            </select>
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label">区级地区:</div>
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="area_3" id="area_3">
+                                                <option  value="">==请选择地区==</option>
+                                                <{volist name="area_3list" id="vo"}>
+                                                    <option  value="<{$vo['id']}>" <{if condition="$vo['id'] eq $area_3"}>selected<{/if}>><{$vo['name']}></option>
+                                                <{/volist}>
+                                            </select>
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label"><b style="color:#ff0000">(*)</b>小区:</div>
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="area_4" id="area_4">
+                                                <option  value="">==请选择地区==</option>
+                                                <{volist name="area_4list" id="vo"}>
+                                                    <option  value="<{$vo['id']}>" <{if condition="$vo['id'] eq $info['community_id']"}>selected<{/if}>><{$vo['name']}></option>
+                                                <{/volist}>
+                                            </select>
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label"><b style="color:#ff0000">(*)</b>楼号:</div>
+                                        <div class="col-sm-4">
+                                            <input id="text_3_input1" type="number" placeholder="请输入楼号" class="form-control" value="<{$info['building']}>" name="building">
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label"><b style="color:#ff0000">(*)</b>单元:</div>
+                                        <div class="col-sm-4">
+                                            <input id="text_4_input1" type="number"  placeholder="请输入单元" class="form-control" value="<{$info['unit']}>" name="unit">
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label"><b style="color:#ff0000">(*)</b>门牌:</div>
+                                        <div class="col-sm-4">
+                                            <input id="text_5_input1" placeholder="请输入门牌" class="form-control" value="<{$info['room']}>" name="room">
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label"><b style="color:#ff0000">(*)</b>面积:</div>
+                                        <div class="col-sm-4">
+                                            <input id="text_6_input1" placeholder="请输入面积" class="form-control" value="<{$info['area']}>" name="area">
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label"><b style="color:#ff0000">(*)</b>房屋类型:</div>
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <{volist name="types" id="vo"}>
+                                                <label class="col-sm-3">
+                                                    <input id="text_7_input1"  class="checkbox-inline i-checks" name="type" type="radio" value="<{$key}>" <{if condition="$key eq $info['type']"}>checked<{/if}>>
+                                                    <{$vo}>
+                                                </label>
+                                                <{/volist}>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label"><b style="color:#ff0000">(*)</b>小区状态:</div>
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <{volist name="stats" id="vo"}>
+                                                <label class="col-sm-3">
+                                                    <input id="text_8_input1"  class="checkbox-inline i-checks" name="stat" type="radio" value="<{$key}>" <{if condition="$key eq $info['stat']"}>checked<{/if}>>
+                                                    <{$vo}>
+                                                </label>
+                                                <{/volist}>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label"><b style="color:#ff0000">(*)</b>出售状态:</div>
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <{volist name="sell_outs" id="vo"}>
+                                                <label class="col-sm-3">
+                                                    <input id="text_9_input1"  class="checkbox-inline i-checks" name="sell_out" type="radio" value="<{$key}>" <{if condition="$key eq $info['sell_out']"}>checked<{/if}>>
+                                                    <{$vo}>
+                                                </label>
+                                                <{/volist}>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-4 col-sm-offset-2">
+                                            <a href="javascript:;" id="submitid1" class="btn btn-warning btnbottom" data-loading-text="加载中...">立即保存</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+
+    require(['bootstrap' ,'validate', 'layer'],function($, $1, layer){
+        var loading;
+        $ = $.extend($, $1);
+
+        $1('#formid1').validate({
+            submitHandler:function(form){
+                $.ajax({
+                    url:"",
+                    type:'post',
+                    cache:false,
+                    data:$(form).serialize(),
+                    dataType:'json',
+                    beforeSend:function(XMLHttpRequest){
+                        $("#submitid1").addClass('disabled');
+                        $("#submitid1").button('loading');
+                        loading = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+                    },
+                    complete:function(XMLHttpRequest, textStatus){
+                        $("#submitid1").removeClass('disabled');
+                        $("#submitid1").button('reset');
+                        layer.close(loading);
+                    },
+
+                    success:function(data,textStatus){
+                        if(data.code == 1){
+                            var time = data.wait?(data.wait*1000):2000;
+                            layer.msg(data.msg?data.msg:'success!!', {icon: 1,time:time});
+                            setTimeout(function(){
+
+                                if(top.window != window){
+                                    if(typeof parent.window.iframefinish == 'function'){
+                                        parent.window.iframefinish()
+                                    }else if(typeof top.window.iframefinish == 'function'){
+                                        parent.window.iframefinish()
+                                    }else if(typeof top.window.reload == 'function'){
+                                        top.window.reload();
+                                    }else{
+                                        top.window.location.reload();
+                                    }
+                                }
+                            },time);
+                        }else{
+                            layer.msg(data.msg?data.msg:'出错了',{icon:2});
+                        }
+
+                    },
+                    error:function(XMLHttpRequest, textStatus, errorThrown){
+                        if(XMLHttpRequest.status == 404){
+                            alert('404');
+                        }
+                    }
+                });
+            }
+        });
+
+        require(['validate'],function($){
+            $("#text_1_input1").rules("add", {"required":true});
+            $("#text_2_input1").rules("add", {"required":true});
+            $("#text_3_input1").rules("add", {"required":true});
+            $("#text_4_input1").rules("add", {"required":true});
+            $("#text_5_input1").rules("add", {"required":true});
+            $("#text_6_input1").rules("add", {"required":true});
+            $("#text_7_input1").rules("add", {"required":true});
+            $("#text_8_input1").rules("add", {"required":true});
+            $("#text_9_input1").rules("add", {"required":true});
+        })
+
+        $("#submitid1").click(function(){
+            $("#formid1").submit();
+        });
+
+        $(document).ready(function(){
+            for (var i = 0; i < 3; i++) {
+                var j = parseInt(i) + parseInt(1);
+                $('#area_'+j).change(function(){
+                    getList(this);
+                });
+            }
+        });
+
+        function getList(e){
+            var area = e.id;
+            var val = $("#"+area+" option:selected").val();
+            var id = area.split('_')[1];
+
+            if(id == 1 || id == 2 || id == 3){
+                $.ajax({
+                    url:"/index.php/qhrlwx/admin_user/getAreaList.html",
+                    type:'post',
+                    cache:false,
+                    data:{area_id:val,type:id},
+                    dataType:'json',
+                    success:function(data){
+                        if(data.code != 1){
+                            layer.msg(data.msg?data.msg:'出错了',{icon:2});
+                        }else{
+                            var s_id = parseInt(id) + parseInt(1);
+                            $("#area_"+s_id).html('');
+                            if(s_id == 2){
+                                $("#area_3").html('');
+                                $("#area_3").html('<option  value="">==请选择地区==</option>');
+                            }
+                            if(s_id == 2 || s_id == 3){
+                                $("#area_4").html('');
+                                $("#area_4").html('<option  value="">==请选择地区==</option>');
+                            }
+                            var html = '';
+                            html += '<option  value="">==请选择地区==</option>';
+                            if(data.data != false){
+                                $.each(data.data,function(k,v){
+                                    html += '<option  value="'+v.id+'">'+v.name+'</option>';
+                                });
+                            }else{
+                                layer.msg('小区为空，请添加小区！',{icon:2});
+                            }
+                            
+                            $("#area_"+s_id).html(html);
+
+                        }
+
+                    },
+                   
+                });
+            }
+            
+        }
+    });
+</script>
+<{include file="jhy@public/footer"}>  

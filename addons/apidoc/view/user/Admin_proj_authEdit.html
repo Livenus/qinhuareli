@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+
+    <title>后台管理</title>
+
+    <meta name="keywords" content="省付吧后台">
+    <meta name="description" content="省付吧后台">
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+
+    <link rel="shortcut icon" href="favicon.ico"> 
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/yysweb.css" rel="stylesheet">
+    <!-- Sweet Alert -->
+    <!-- <link href="/static/css/plugins/sweetalert/sweetalert.css" rel="stylesheet"> -->
+    <!-- 全局js -->
+    <!-- <script src="/static/js/jquery.min.js"></script> -->
+    <!-- <script src="/static/js/bootstrap.min.js"></script> -->
+    <!-- Sweet alert -->
+    <!-- <script src="/static/js/plugins/sweetalert/sweetalert.min.js"></script> -->
+    <!-- 自定义js -->
+    <!-- <script src="https://cdn.bootcss.com/layer/3.1.0/layer.js"></script> -->
+    <!-- <link href="https://cdn.bootcss.com/layer/3.1.0/theme/default/layer.css" rel="stylesheet"> -->
+    <!-- <script src="/static/js/content.js?v=1.0.0"></script> -->
+
+<script src="/static/js/require.js"></script>
+<script src="/static/js/requireconfig.js"></script>
+<script>
+
+</script>
+
+     <style>
+         body{
+        background: #f3f3f4;
+    }
+    </style>
+</head>
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title" style=" padding-bottom: 0;">
+      			权限分配
+            </div>
+            <div class="ibox-content">
+                          
+<form method="post" class="form-horizontal" id="jform">
+	<{foreach $auth_info as $v}>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">
+				<{$v.nickname}><input name="selectauthlist[]" class="checkbox-inline i-checks"<{if condition="$v['auth']"}> checked <{/if}> type="checkbox" value="<{$v.index_id}>">:
+			</label>
+				<div class="col-sm-10">
+                    <label class="checkbox-inline i-checks">
+                        <input name="selectauthlist[]"<{if condition="isset($v['dir_rules'])"}> checked <{/if}>  type="checkbox" value="<{$vv.id}>">
+                        <{$vv.title}>
+                    </label>
+					<!-- <{foreach $v['son'] as $vv}>
+					<label class="checkbox-inline i-checks">
+						<input name="selectauthlist[]"<{if condition="$gauthlist[$gid][$vv.id]"}> checked <{/if}>  type="checkbox" value="<{$vv.id}>">
+						<{$vv.title}>
+					</label>【
+						<{foreach $vv['son'] as $vvv}>
+						<label class="checkbox-inline i-checks">
+						<input name="selectauthlist[]"<{if condition="$gauthlist[$gid][$vvv.id]"}> checked <{/if}>  type="checkbox" value="<{$vvv.id}>">
+						<{$vvv.title}>
+					</label>						
+						<{/foreach}>】
+					<{/foreach}> -->
+				</div>
+			</div>
+		<div class="hr-line-dashed"></div>
+	<{/foreach}>
+	<div class="form-group">
+		<div class="col-sm-4 col-sm-offset-2">
+			<a href="javascript:;" id="submitid" class="btn btn-warning btnbottom" data-loading-text="加载中...">立即保存</a>
+		</div>
+	</div>
+</form>
+                                
+                         
+               
+            </div>
+        </div>
+    </div>
+
+<script>
+	
+	require(['icheck', 'layer','bootstrap'],function($, layer){
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+    	var $submit = $('#submitid');
+    	var submit = function(){
+    		
+    			var $form = $('#jform');
+    	        $.ajax({
+                    url: location.href,
+                    type:'post',
+                    cache:false,
+                    data:$form.serialize(),
+                    dataType:'json',
+                    beforeSend:function(XMLHttpRequest){
+                        $submit.addClass('disabled');
+                        $submit.button('loading');
+                        loading = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+
+                    },
+                    complete:function(XMLHttpRequest, textStatus){
+                        $submit.removeClass('disabled');
+                        $submit.button('reset');
+                        layer.close(loading);
+                    },
+                    success:function(data,textStatus){
+                        layer.msg('success!!', {icon: 1});
+                        setTimeout(function(){
+                            if(top.window != window){
+                                if(typeof parent.window.iframefinish == 'function'){
+                                    parent.window.iframefinish()
+                                }else if(typeof top.window.iframefinish == 'function'){
+                                    parent.window.iframefinish()
+                                }
+                                
+                            }
+                        },2000);
+                    },
+                    error:function(XMLHttpRequest, textStatus, errorThrown){
+                        if(XMLHttpRequest.status == 404){
+                            alert('404');
+                        }
+                    }
+                });
+    	}
+    	$submit.click(function(){submit()});
+	
+	});
+</script>
+
+</body>
+</html>  

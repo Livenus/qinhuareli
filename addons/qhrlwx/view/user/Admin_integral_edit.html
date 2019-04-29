@@ -1,0 +1,489 @@
+<{include file="jhy@public/header"}>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="tabs-container ibox-title">
+                    <ul class="nav nav-tabs ">
+                       
+                    </ul>
+                    <div class="ibox-content">
+                        <div class="">
+                            <form class="form-horizontal" id="formid1" action="" method='post'>
+                               <div class="panel-heading">
+                                    修改礼品                                </div> 
+                                
+                <div class="form-group " id="text_2">
+                    <div class="col-sm-2 control-label"><b style="color:#ff0000">(*)</b>产品名称:</div>
+                    <div class="col-sm-4">
+                        <input id="text_2_input1" placeholder="请输入标题"  type="text" class="form-control" value="<{$info['title']}>" name="title" >
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+                <div class="form-group " id="text_1">
+                    <div class="col-sm-2 control-label">礼品状态:</div>
+                    <div class="col-sm-4">
+                        <input  type="radio"  value="0" name="stat" <{if condition="0 eq $info['stat']"}> checked = "" <{/if}> >上架
+                        <input  type="radio"  value="1" name="stat" <{if condition="1 eq $info['stat']"}> checked = "" <{/if}> >下架
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+              
+                <div class="form-group " id="text_7">
+                    <div class="col-sm-2 control-label">礼品库存:</div>
+                    <div class="col-sm-4">
+                        <input id="text_3_input1" placeholder="请输入礼品库存数量"  type="number" class="form-control" value="<{$info['stock']}>" name="stock" >
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>                          
+                <div class="form-group " id="text_3">
+                    <div class="col-sm-2 control-label">兑换积分:</div>
+                    <div class="col-sm-4">
+                        <input id="text_3_input1" placeholder="请输入兑换所需要的积分"  type="text" class="form-control" value="<{$info['integral']}>" name="integral" >
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>            
+            <div class="form-group up_div " id="list_s_4">
+                <div class="col-sm-2 control-label">礼品图片:</div>
+                <div class="col-sm-8" id="up_dnd_list_s_4">
+                    <div class="upload_list_s_4">
+                        <div id="imagek_list_s_4" class="up_imagek">选择图片</div>
+                        <div id="filelist_list_s_4"></div>
+                    </div>
+                    <span class="help-block m-b-none"></span>
+                </div>
+            </div>      
+    
+            <script>
+ require(['webuploader'], function(WebUploader){
+    var count = 0, limitcount = parseInt('3');
+    var s = '<{$info['image']}>';
+    var val = JSON.parse(s) || [];
+    var muti = false;
+    if('0' == '1'){
+        muti = true;
+    }
+    
+    $(function(){
+        setTimeout(function(){
+             var uploader_list_s_4 = WebUploader.create({
+                 auto:true,
+                 swf:'/static/js/plugins/webuploader/Uploader.swf',
+                 server:'/index.php/jhy/jhyupload/file.html?action=uploadimage&modulename=qhrlwx&cat=cat1&_ajax=1',
+                 imagek : '#imagek_list_s_4',
+                 disableGlobalDnd:'#up_dnd_list_s_4',
+                 paste : '#up_dnd_list_s_4',
+                 
+                 accept: {
+                    title: 'Images',
+                    extensions: 'gif,jpg,jpeg,bmp,png',
+                    mimeTypes: 'image/*'
+                }
+            }); 
+            //添加一个图片
+            var addfile = function(name, src, id){
+                    count ++;
+                    if(!id) id='';
+                    var $li = $(
+                        '<div id="'+id+'" class="file-item thumbnail" data-index="'+count+'">' +
+                            '<img src="'+src+'">' +
+                            '<div class="info">' + name + '</div>' +
+                            '<div class="butn" style="display:none"><span class="left">1</span><span class="mid">x</span><span class="rgt">3</span></div>'+
+                        '</div>'
+                        ),
+                    $img = $li.find('img');
+            
+            
+                // $list为容器jQuery实例
+                $list.append( $li );
+                addipt(src);
+                $li.hover(function(t){
+                    $(t.currentTarget).find('.butn').css('display','block')
+                }, function(t){
+                    $(t.currentTarget).find('.butn').css('display','none')
+        
+                });
+                
+                //删除
+                $li.find('span.mid').click(function(t){
+    //                 var fileid = $(t.currentTarget).closest('div.file-item').attr('id');
+                    var li = $(t.currentTarget).closest('div.file-item');
+                    var fileid = li.data('index');
+                    $('#ipt_list_s_4_'+count).val('');
+                    li.remove();
+                    count--;
+                });
+                
+            }
+            
+            var addipt = function(val){
+                var ipt = $('#ipt_list_s_4_' + count);
+                var fieldname = 'image';
+                if(muti){
+                    fieldname += '['+count+']';
+                }
+                if(ipt.length <= 0){
+                    ipt = $('<input id="ipt_list_s_4_'+count+'"  type="hidden" value="'+val+'" name="image[]">').appendTo($('#up_dnd_list_s_4'));
+                }
+            }
+            
+            var $list = $('#filelist_list_s_4');
+            $.each(val, function(k,v){
+                if(v){
+                    addfile(v, v);
+                }
+            });
+            
+            // 当有文件添加进来的时候
+            uploader_list_s_4.on( 'fileQueued', function( file ) {
+                if(count >= limitcount){
+                    alert('超过最大数量');
+                    uploader_list_s_4.cancelFile(file);
+                    return false;
+                }
+                addfile(file.name,'',file.id);
+        //         var $li = $(
+        //                 '<div id="' + file.id + '" class="file-item thumbnail">' +
+        //                     '<img>' +
+        //                     '<div class="info">' + file.name + '</div>' +
+        //                 '</div>'
+        //                 ),
+            
+                    $img = $('#'+file.id).find('img');
+            
+        //         // $list为容器jQuery实例
+        //         $list.append( $li );
+            
+                // 创建缩略图
+                // 如果为非图片文件，可以不用调用此方法。
+                // thumbnailWidth x thumbnailHeight 为 100 x 100
+                uploader_list_s_4.makeThumb( file, function( error, src ) {
+                    if ( error ) {
+                        $img.replaceWith('<span>不能预览</span>');
+                        return;
+                    }
+            
+                    $img.attr( 'src', src );
+                } );
+            });
+                   
+         
+             // 文件上传过程中创建进度条实时显示。
+            uploader_list_s_4.on( 'uploadProgress', function( file, percentage ) {
+                var $li = $( '#'+file.id ),
+                    $percent = $li.find('.progress .progress-bar');
+            
+                // 避免重复创建
+                if ( !$percent.length ) {
+                    $percent = $('<div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width: 1%;"> </div></div>')
+                            .appendTo( $li )
+                            .find('span');
+                }
+            
+                $percent.css( 'width', percentage * 100 + '%' );
+            });
+            
+            // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+            uploader_list_s_4.on( 'uploadSuccess', function( file ,response) {
+                if(response['code'] == 1){
+                    $( '#'+file.id ).addClass('upload-state-done');
+                    $('#'+file.id).find('img').attr('src', response.data.val);
+                    var ipt = $('#ipt_list_s_4_' + count);
+    //                 if(ipt.length <= 0 ){
+    //                     ipt = $('<input value="["uploads\/qhrlwx\/cat1\/20180910\/986ed00fd132fc874f886493ba07068d.png"]" name="image" type="hidden" />').appendTo($('#list_s_4'));
+    //                 }
+                    ipt.val(response.data.val);
+                    
+                }else{
+                    var $li = $( '#'+file.id ),
+                    $error = $li.find('div.error');
+            
+                    // 避免重复创建
+                    if ( !$error.length ) {
+                        $error = $('<div class="error"></div>').appendTo( $li );
+                    }
+                
+                    $error.text(response['msg']?response['msg']:'上传失败');
+                 }    
+            
+                
+            });
+            
+            // 文件上传失败，显示上传出错。
+            uploader_list_s_4.on( 'uploadError', function( file ) {
+                var $li = $( '#'+file.id ),
+                    $error = $li.find('div.error');
+            
+                // 避免重复创建
+                if ( !$error.length ) {
+                    $error = $('<div class="error"></div>').appendTo( $li );
+                }
+            
+                $error.text('上传失败');
+            });
+            
+            // 完成上传完了，成功或者失败，先删除进度条。
+            uploader_list_s_4.on( 'uploadComplete', function( file ) {
+                $( '#'+file.id ).find('.progress').remove();
+            });
+    
+        },500);
+
+    
+    
+    });
+
+ }); 
+            </script>  
+            <script></script>
+                            <div class="form-group ">
+                        <label class="col-sm-2 control-label"><b style="color:#ff0000">(*)</b>礼品介绍:</label>
+                        <div class="col-sm-10">
+                            <textarea id="text_5" name="content"><{$info['content']}></textarea>
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div><script>  
+(function () {
+
+    var URL = window.UEDITOR_HOME_URL || getUEBasePath();
+
+    window.UEDITOR_CONFIG = {
+        UEDITOR_HOME_URL: '/static/ueditor/'
+        , serverUrl: URL + '/index.php/index/upload/ueditor.html?modulename=qhrlwx&cat=cat1&_ajax=1'
+        , toolbars: [[
+            'fullscreen', 'source', '|', 'undo', 'redo', '|',
+            'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
+            'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
+            'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
+            'directionalityltr', 'directionalityrtl', 'indent', '|',
+            'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
+            'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
+            'simpleupload', 'insertimage', 'emotion', 'scrawl', 'insertvideo', 'music', 'attachment', 'map', 'gmap', 'insertframe', 'insertcode', 'webapp', 'pagebreak', 'template', 'background', '|',
+            'horizontal', 'date', 'time', 'spechars', 'snapscreen', 'wordimage', '|',
+            'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
+            'print', 'preview', 'searchreplace', 'drafts', 'help'
+        ]]
+        // xss过滤白名单 名单来源: https://raw.githubusercontent.com/leizongmin/js-xss/master/lib/default.js
+        ,whitList: {
+            a:      ['target', 'href', 'title', 'class', 'style'],
+            abbr:   ['title', 'class', 'style'],
+            address: ['class', 'style'],
+            area:   ['shape', 'coords', 'href', 'alt'],
+            article: [],
+            aside:  [],
+            audio:  ['autoplay', 'controls', 'loop', 'preload', 'src', 'class', 'style'],
+            b:      ['class', 'style'],
+            bdi:    ['dir'],
+            bdo:    ['dir'],
+            big:    [],
+            blockquote: ['cite', 'class', 'style'],
+            br:     [],
+            caption: ['class', 'style'],
+            center: [],
+            cite:   [],
+            code:   ['class', 'style'],
+            col:    ['align', 'valign', 'span', 'width', 'class', 'style'],
+            colgroup: ['align', 'valign', 'span', 'width', 'class', 'style'],
+            dd:     ['class', 'style'],
+            del:    ['datetime'],
+            details: ['open'],
+            div:    ['class', 'style'],
+            dl:     ['class', 'style'],
+            dt:     ['class', 'style'],
+            em:     ['class', 'style'],
+            font:   ['color', 'size', 'face'],
+            footer: [],
+            h1:     ['class', 'style'],
+            h2:     ['class', 'style'],
+            h3:     ['class', 'style'],
+            h4:     ['class', 'style'],
+            h5:     ['class', 'style'],
+            h6:     ['class', 'style'],
+            header: [],
+            hr:     [],
+            i:      ['class', 'style'],
+            img:    ['src', 'alt', 'title', 'width', 'height', 'id', '_src', 'loadingclass', 'class', 'data-latex'],
+            ins:    ['datetime'],
+            li:     ['class', 'style'],
+            mark:   [],
+            nav:    [],
+            ol:     ['class', 'style'],
+            p:      ['class', 'style'],
+            pre:    ['class', 'style'],
+            s:      [],
+            section:[],
+            small:  [],
+            span:   ['class', 'style'],
+            sub:    ['class', 'style'],
+            sup:    ['class', 'style'],
+            strong: ['class', 'style'],
+            table:  ['width', 'border', 'align', 'valign', 'class', 'style'],
+            tbody:  ['align', 'valign', 'class', 'style'],
+            td:     ['width', 'rowspan', 'colspan', 'align', 'valign', 'class', 'style'],
+            tfoot:  ['align', 'valign', 'class', 'style'],
+            th:     ['width', 'rowspan', 'colspan', 'align', 'valign', 'class', 'style'],
+            thead:  ['align', 'valign', 'class', 'style'],
+            tr:     ['rowspan', 'align', 'valign', 'class', 'style'],
+            tt:     [],
+            u:      [],
+            ul:     ['class', 'style'],
+            video:  ['autoplay', 'controls', 'loop', 'preload', 'src', 'height', 'width', 'class', 'style']
+        }
+    };
+
+    function getUEBasePath(docUrl, confUrl) {
+
+        return getBasePath(docUrl || self.document.URL || self.location.href, confUrl || getConfigFilePath());
+
+    }
+
+    function getConfigFilePath() {
+
+        var configPath = document.getElementsByTagName('script');
+
+        return configPath[ configPath.length - 1 ].src;
+
+    }
+
+    function getBasePath(docUrl, confUrl) {
+
+        var basePath = confUrl;
+
+
+        if (/^(\/|\\)/.test(confUrl)) {
+
+            basePath = /^.+?\w(\/|\\)/.exec(docUrl)[0] + confUrl.replace(/^(\/|\\)/, '');
+
+        } else if (!/^[a-z]+:/i.test(confUrl)) {
+
+            docUrl = docUrl.split("#")[0].split("?")[0].replace(/[^\\/]+$/, '');
+
+            basePath = docUrl + "" + confUrl;
+
+        }
+
+        return optimizationPath(basePath);
+
+    }
+
+    function optimizationPath(path) {
+
+        var protocol = /^[a-z]+:\/\//.exec(path)[ 0 ],
+            tmp = null,
+            res = [];
+
+        path = path.replace(protocol, "").split("?")[0].split("#")[0];
+        path = path.replace(/\\/g, '/').split(/\//);
+        path[ path.length - 1 ] = "";
+        while (path.length) {
+            if (( tmp = path.shift() ) === "..") {
+                res.pop();
+            } else if (tmp !== ".") {
+                res.push(tmp);
+            }
+
+        }
+
+        return protocol + res.join("/");
+
+    }
+
+    window.UE = {
+        getUEBasePath: getUEBasePath
+    };
+
+})();
+</script>       <script>
+//    require(['zeroclipboard','ueditor','editorlang'],function(zeroclipboard){
+    require(['editorlang'],function(){
+//      window.ZeroClipboard = zeroclipboard;
+        if(window.ue_text_5){window.ue_text_5.destroy();}
+        
+        window.ue_text_5 = UE.getEditor('text_5',[]); 
+    }); 
+</script><div class="form-group " id="text_6">
+    <div class="col-sm-2 control-label">排序:</div>
+    <div class="col-sm-4">
+        <input id="text_6_input1" placeholder="请输入排序(数字越小排序时越靠前)"  type="number" class="form-control" value="<{$info['sort']}>" name="sort" >
+        <span class="help-block m-b-none"></span>
+    </div>
+</div>                                    <div class="form-group">
+                                        <div class="col-sm-4 col-sm-offset-2">
+                                            <a href="javascript:;" id="submitid1" class="btn btn-warning btnbottom" data-loading-text="加载中...">立即保存</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    require(['bootstrap' ,'validate', 'layer'],function($, $1, layer){
+        var loading;
+        $ = $.extend($, $1);
+        $1('#formid1').validate({
+            submitHandler:function(form){
+                $.ajax({
+                    url:"",
+                    type:'post',
+                    cache:false,
+                    data:$(form).serialize(),
+                    dataType:'json',
+                    beforeSend:function(XMLHttpRequest){
+                        $("#submitid1").addClass('disabled');
+                        $("#submitid1").button('loading');
+                        loading = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+
+                    },
+                    complete:function(XMLHttpRequest, textStatus){
+                        $("#submitid1").removeClass('disabled');
+                        $("#submitid1").button('reset');
+                        layer.close(loading);
+                    },
+                    success:function(data,textStatus){
+                        if(data.code == 1){
+                            var time = data.wait?(data.wait*1000):2000;
+                            layer.msg(data.msg?data.msg:'success!!', {icon: 1,time:time});
+                            setTimeout(function(){
+                                
+                                if(top.window != window){
+                                    if(typeof parent.window.iframefinish == 'function'){
+                                        parent.window.iframefinish()
+                                    }else if(typeof top.window.iframefinish == 'function'){
+                                        parent.window.iframefinish()
+                                    }else if(typeof top.window.reload == 'function'){
+                                        top.window.reload();
+                                    }else{
+                                        top.window.location.reload();
+                                    }
+                                    
+                                }
+                            },time);
+                        }else{
+                            layer.msg(data.msg?data.msg:'出错了',{icon:2});
+                        }
+                    },
+                    error:function(XMLHttpRequest, textStatus, errorThrown){
+                        if(XMLHttpRequest.status == 404){
+                            alert('404');
+                        }
+                    }
+                });
+            }
+        });
+        
+
+        require(['validate'],
+        function($){
+            
+            $("#text_1_input1").rules("add", {"required":true});$("#text_2_input1").rules("add", {"required":true});$("#text_3_input1").rules("add", {"required":false});$("#text_6_input1").rules("add", {"required":false});
+        })
+        $("#submitid1").click(function(){
+            $("#formid1").submit();
+        });
+    });
+</script>
+<{include file="jhy@public/footer"}>  

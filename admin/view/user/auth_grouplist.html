@@ -1,0 +1,134 @@
+<{include file="public/header"}>
+
+    <div class="wrapper wrapper-content animated fadeInRight" id="contents">
+        <!-- 
+        <div class="ibox float-e-margins" id="contents">
+           <div class="ibox-title" style=" padding-bottom: 0;">
+      
+            </div>
+            <div class="ibox-content">
+
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                       
+                        <div class="example-wrap">
+                            <div class="example">
+                                <table id="dg" data-height="100%" data-mobile-responsive="true">
+                                </table>
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+            -->
+    </div>
+<script>
+
+require(['bootstrap-table','layer'],function(a, layer){
+	var data = JSON.parse('<{$glist|json_encode}>'),_data=[];
+	$.each(data, function(k, v){
+		_data.push(v);
+	});
+	data = _data;
+	
+	$.each(data, function(k, v){
+		var html = '<div class="ibox float-e-margins" id="contents">' + 
+			'<div class="ibox-title" style=" padding-bottom: 0;">'+
+	      				v.group.name + '('+v.group.code+')'+
+          			'</div>'+
+			'<div class="ibox-content">'+
+			            '<div class="row row-lg">'+
+			                '<div class="col-sm-12">'+
+			                    '<!-- Example Events -->'+
+			                    '<div class="example-wrap">'+
+			                        '<div class="example">'+
+			                            '<table id="dg_'+v.group.code +'" data-height="100%" data-mobile-responsive="true">'+
+			                            '</table>'+
+			                        '</div>'+
+			                    '</div>'+
+			                    '<!-- End Example Events -->'+
+			                '</div>'+
+			            '</div>'+
+			        '</div>'+
+			        '</div> ';
+		$("#contents").append(html);
+		
+		//表格=========================================
+		$('#dg_' + v.group.code).bootstrapTable({
+		    //url:'http://phpcodemaker.com/index.php?s=j/server/list&name=1&age_o=asc&id_o=asc',
+		    //method:'post',
+		    //queryParamsType: "limit",
+		    //queryParams:function(params){
+		    //    params.p = parseInt(params.offset/params.limit)+1;
+		    //    params = $.extend(params, getQueryParams());
+		    //    return params;
+		    //},
+		    //contentType: 'application/json',
+		    //dataType: 'json',
+		    //sidePagination: "server", //表示服务端请求
+		    //pagination: true, //启动分页
+		    pageNumber: 1, //当前第几页
+		    pageSize: 20, //每页显示的记录数
+		    //pageList: [10, 15, 20], //记录数可选列表
+		    data:v.son,
+		    dataField: 'rows',
+		    idField: "id",
+		    columns:[
+		        {checkbox: true,align: 'center', valign: 'middle'},
+		        {title: "#",field:"id",align: "center",valign:"middle"},
+		        {title: "模块",field:"modulename",align: "center",valign:"middle"},
+		        {title: "组名",field:"name",align: "center",valign:"middle"},
+		        {title:"操作",field: "n_do",align: "center",valign: "middle",formatter:function(value,row,index){
+		        	return '<a href="javascript:auth(\''+row.modulename+'\','+row.id+');" class="btn btn-primary" title=""><span class="glyphicon glyphicon-trash"></span>分配权限</a>  ';
+		        	}
+		        }
+		        ],
+		    responseHandler:function(res){
+		      //远程数据加载之前,处理程序响应数据格式,对象包含的参数: 我们可以对返回的数据格式进行处理
+		      //在ajax后我们可以在这里进行一些事件的处理
+		      return res;
+		    }
+
+		});
+		
+		
+		
+	});
+	
+    //关闭IFRAME刷新本页面数据
+    iframefinish = function(){
+        layer.closeAll('iframe');
+        
+    }
+	
+
+});
+
+	auth = function(modulename, id){
+		var url = '/index.php/admin/auth/edit/modulename/'+modulename+'/id/' + id;
+		layer.open({
+            type: 2,
+            title: '修改',
+            // closeBtn: 0, //不显示关闭按钮
+            shade: [0.5],
+            area: ['90%', '90%'],
+            // offset: 'rb', //右下角弹出
+//            time: 2000, //2秒后自动关闭
+             anim: 2,
+             shift:2,
+             maxmin: true, //开启最大化最小化按钮
+            content: [url], //iframe的url，no代表不显示滚动条
+            success:function(layero, index){
+              
+            },
+            end: function(){ //此处用于演示
+              
+            }
+          });
+	}
+
+</script>
+
+<{include file="public/footer"}>    

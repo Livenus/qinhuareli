@@ -1,0 +1,449 @@
+<{include file="jhy@public/header"}>
+<div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="tabs-container ibox-title">
+                    <ul class="nav nav-tabs ">
+
+                    </ul>
+                    <div class="ibox-content">
+                        <div class="">
+                            <form class="form-horizontal" id="formid1" action="" method='post'>
+                               <div class="panel-heading">添加</div> 
+                                <div class="">
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label">报修用户:</div>
+                                        <div class="col-sm-4">
+                                            <input placeholder="请输入用户名" class="form-control" value="" name="username">
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label">用户的报修房子:</div>
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="house_id" id="house_id">
+                                                <option  value="<{$k}>" ><{$vo}></option>
+                                            </select>
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- <div class="form-group ">
+                                        <div class="col-sm-2 control-label">状态:</div>
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="stat">
+                                                <option  value="">==报修状态==</option>
+                                                <{volist name="stats" id="vo" key="k"}>
+                                                    <option  value="<{$k}>" <{if condition="$k eq $info['stat']"}>selected<{/if}>><{$vo}></option>
+                                                <{/volist}>
+                                            </select>
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div> -->
+
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label">报修所在小区:</div>
+                                        <div class="col-sm-4">
+                                            <input placeholder="请输入小区" class="form-control" value="" name="community_name">
+                                            <input type="hidden" name="community_id">
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+
+                                   <!--  <div class="form-group ">
+                                        <div class="col-sm-2 control-label">修理师傅:</div>
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="repairman_id">
+                                                <option  value="">==修理师傅==</option>
+                                                <{volist name="repairnames" id="vo"}>
+                                                    <option  value="<{$vo['id']}>" <{if condition="$vo['id'] eq $info['repairman_id']"}>selected<{/if}>><{$vo['username']}></option>
+                                                <{/volist}>
+                                            </select>
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div> -->
+
+                                    <!-- <div class="form-group">
+                                        <div class="col-sm-2 control-label">修理费用:</div>
+                                        <div class="col-sm-4">
+                                            <input placeholder="请输入修理费用" type="number" class="form-control" value="<{$info['repair_money']}>" name="repair_money" >
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div> -->
+
+                                    <div class="form-group up_div " id="list_s_1">
+                                        <div class="col-sm-2 control-label"><b style="color:#ff0000">(*)</b>报修图片:</div>
+                                        <div class="col-sm-8" id="up_dnd_list_s_1">
+                                            <div class="upload_list_s_1">
+                                                <style type="text/css">
+                                                    .cl-1{
+                                                        position: absolute; top: 0px; left: 0px; width: 76px; 
+                                                        height: 30px; overflow: hidden; bottom: auto; right: auto;
+                                                    }
+                                                    .cl-2{
+                                                        opacity: 0; width: 100%; height: 100%; display: block; 
+                                                        cursor: pointer; background: rgb(255, 255, 255);
+                                                    }
+                                                </style>
+                                                <div id="pick_list_s_1" class="up_pick webuploader-container">
+                                                    <div class="webuploader-pick">选择报修图片</div>
+                                                    <div id="rt_rt_1cmn1ei5d49s1ktq1j6f5b9oab1" class="cl-1">
+                                                        <input type="file" name="file" class="webuploader-element-invisible" multiple="multiple" accept="image/*">
+                                                        <label class="cl-2"></label>
+                                                    </div>
+                                                </div>
+                                                <div id="filelist_list_s_1"></div>
+                                            </div>
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+
+<!-- 上传图片js -->
+<script>
+require(['webuploader'], function(WebUploader){
+    var count = 0, limitcount = parseInt('3');
+    var val = JSON.parse('[null]') || [];
+    var muti = false;
+    if('0' == '1'){
+        muti = true;
+    }
+    
+    $(function(){
+        setTimeout(function(){
+             var uploader_list_s_1 = WebUploader.create({
+                 auto:true,
+                 swf:'/static/js/plugins/webuploader/Uploader.swf',
+                 server:'/index.php/jhy/jhyupload/file.html?action=uploadimage&modulename=qhrlwx&cat=cat1&_ajax=1',
+                 pick : '#pick_list_s_1',
+                 disableGlobalDnd:'#up_dnd_list_s_1',
+                 paste : '#up_dnd_list_s_1',
+                 
+                accept: {
+                    title: 'Images',
+                    extensions: 'gif,jpg,jpeg,bmp,png',
+                    mimeTypes: 'image/*'
+                }
+            }); 
+            //添加一个图片
+            var addfile = function(name, src, id){
+                    count ++;
+                    if(!id) id='';
+                    var $li = $(
+                        '<div id="'+id+'" class="file-item thumbnail" data-index="'+count+'">' +
+                            '<img src="'+src+'">' +
+                            '<div class="info">' + name + '</div>' +
+                            '<div class="butn" style="display:none"><span class="left">1</span><span class="mid">x</span><span class="rgt">3</span></div>'+
+                        '</div>'
+                        ),
+                    $img = $li.find('img');
+            
+            
+                // $list为容器jQuery实例
+                $list.append( $li );
+                addipt(src);
+                $li.hover(function(t){
+                    $(t.currentTarget).find('.butn').css('display','block')
+                }, function(t){
+                    $(t.currentTarget).find('.butn').css('display','none')
+        
+                });
+                
+                //删除
+                $li.find('span.mid').click(function(t){
+    //                 var fileid = $(t.currentTarget).closest('div.file-item').attr('id');
+                    var li = $(t.currentTarget).closest('div.file-item');
+                    var fileid = li.data('index');
+                    $('#ipt_list_s_1_'+count).val('');
+                    li.remove();
+                    count--;
+                });
+                
+            }
+            
+            var addipt = function(val){
+                var ipt = $('#ipt_list_s_1_' + count);
+                if(ipt.length <= 0){
+                    ipt = $('<input id="ipt_list_s_1_'+count+'"  type="hidden" value="'+val+'" name="repair_pic[]">').appendTo($('#up_dnd_list_s_1'));
+                }
+            }
+            
+            var $list = $('#filelist_list_s_1');
+            $.each(val, function(k,v){
+                if(v){
+                    addfile(v, v);
+                }
+            });
+            
+            // 当有文件添加进来的时候
+            uploader_list_s_1.on( 'fileQueued', function( file ) {
+                if(count >= limitcount){
+                    alert('超过最大数量');
+                    uploader_list_s_1.cancelFile(file);
+                    return false;
+                }
+                addfile(file.name,'',file.id);
+        //         var $li = $(
+        //                 '<div id="' + file.id + '" class="file-item thumbnail">' +
+        //                     '<img>' +
+        //                     '<div class="info">' + file.name + '</div>' +
+        //                 '</div>'
+        //                 ),
+            
+                    $img = $('#'+file.id).find('img');
+            
+        //         // $list为容器jQuery实例
+        //         $list.append( $li );
+            
+                // 创建缩略图
+                // 如果为非图片文件，可以不用调用此方法。
+                // thumbnailWidth x thumbnailHeight 为 100 x 100
+                uploader_list_s_1.makeThumb( file, function( error, src ) {
+                    if ( error ) {
+                        $img.replaceWith('<span>不能预览</span>');
+                        return;
+                    }
+            
+                    $img.attr( 'src', src );
+                } );
+            });
+                   
+         
+             // 文件上传过程中创建进度条实时显示。
+            uploader_list_s_1.on( 'uploadProgress', function( file, percentage ) {
+                var $li = $( '#'+file.id ),
+                    $percent = $li.find('.progress .progress-bar');
+            
+                // 避免重复创建
+                if ( !$percent.length ) {
+                    $percent = $('<div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width: 1%;"> </div></div>')
+                            .appendTo( $li )
+                            .find('span');
+                }
+            
+                $percent.css( 'width', percentage * 100 + '%' );
+            });
+            
+            // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+            uploader_list_s_1.on( 'uploadSuccess', function( file ,response) {
+                if(response['code'] == 1){
+                    $( '#'+file.id ).addClass('upload-state-done');
+                    $('#'+file.id).find('img').attr('src', response.data.val);
+                    var ipt = $('#ipt_list_s_1_' + count);
+    //                 if(ipt.length <= 0 ){
+    //                     ipt = $('<input value="[null]" name="pic" type="hidden" />').appendTo($('#list_s_1'));
+    //                 }
+                    ipt.val(response.data.val);
+                    
+                }else{
+                    var $li = $( '#'+file.id ),
+                    $error = $li.find('div.error');
+            
+                    // 避免重复创建
+                    if ( !$error.length ) {
+                        $error = $('<div class="error"></div>').appendTo( $li );
+                    }
+                
+                    $error.text(response['msg']?response['msg']:'上传失败');
+                 }    
+            
+                
+            });
+            
+            // 文件上传失败，显示上传出错。
+            uploader_list_s_1.on( 'uploadError', function( file ) {
+                var $li = $( '#'+file.id ),
+                    $error = $li.find('div.error');
+            
+                // 避免重复创建
+                if ( !$error.length ) {
+                    $error = $('<div class="error"></div>').appendTo( $li );
+                }
+            
+                $error.text('上传失败');
+            });
+            
+            // 完成上传完了，成功或者失败，先删除进度条。
+            uploader_list_s_1.on( 'uploadComplete', function( file ) {
+                $( '#'+file.id ).find('.progress').remove();
+            });
+    
+        },500);
+
+    
+    
+    });
+
+}); 
+</script>  
+
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label">报修说明:</div>
+                                        <div class="col-sm-4">
+                                            <input placeholder="请输入报修说明" class="form-control" value="" name="repair_content">
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+                                            
+                                    <!-- <div class="form-group">
+                                        <div class="col-sm-2 control-label">用户维修评级:</div>
+                                        <div class="col-sm-4">
+                                            <input placeholder="请输入用户维修评级" class="form-control" value="" name="repair_grade">
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div> -->
+
+                                    <!-- <div class="form-group">
+                                        <div class="col-sm-2 control-label">用户维修评论:</div>
+                                        <div class="col-sm-4">
+                                            <input placeholder="请输入用户维修评论" class="form-control" value="" name="grade_content">
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div> -->
+
+                                    <!-- <div class="form-group">
+                                        <div class="col-sm-2 control-label">付款时间:</div>
+                                        <div class="col-sm-4">
+                                            <input placeholder="请输入付款时间" type="text" class="form-control" placeholder="付款时间:" value="" name="pay_time" readonly>
+                                            <span class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+                                     <script>
+
+                                        require(['laydate','jquery','j_common'], function(laydate, $, j){
+                                            var option = {
+                                                elem : '#datetime_12_input1',
+                                                trigger: 'click',
+                                                type : 'datetime',
+                                                value:('' == '') ? '' :j.int2date('')
+                                            };
+
+                                            var layd = laydate.render(option);
+                                            if(''){
+                                                layd.config.elem=null;
+                                            }
+
+                                        });
+                                     </script> -->
+
+                                    <div class="form-group">
+                                        <div class="col-sm-4 col-sm-offset-2">
+                                            <a href="javascript:;" id="submitid1" class="btn btn-warning btnbottom" data-loading-text="加载中...">立即保存</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+
+    require(['bootstrap' ,'validate', 'layer'],function($, $1, layer){
+        var loading;
+        $ = $.extend($, $1);
+        $(document).ready(function(){
+            $("#house_id").focus(function(){
+                var username = $("input[name=username]").val();
+                if(!username){
+                    layer.msg('请输入用户名',{icon:2});
+                    return false;
+                }else{
+                    $.ajax({
+                        url:"/index.php/qhrlwx/Admin_repair/getHouses.html",
+                        type:'post',
+                        cache:false,
+                        data:{username:username},
+                        dataType:'json',
+                        success:function(data,textStatus){
+                            console.log(data);
+                            if(data.code == 1){
+                                $list = $("#house_id");
+                                $list.html("");
+                                var html = '';
+                                html += '<option  value="0" >==请选择房子==</option>';
+                                $.each(data.data,function(k,v){
+                                    html += '<option value="'+v.id+'" >'+v.id+'--'+v.code+'--'+v.community_name+'--'+v.community_id+'</option>';
+                                });
+                                
+                                $(html).appendTo($list);
+                            }
+                            
+                        }
+                    });
+                }
+                
+            });
+
+            $("#house_id").change(function(){
+                var textArr = $("#house_id option:selected").text().split('--');
+                $("input[name=community_name]").val(textArr[2]);
+                $("input[name=community_id]").val(textArr[3]);
+            })
+
+        });
+        $1('#formid1').validate({
+            submitHandler:function(form){
+                $.ajax({
+                    url:"",
+                    type:'post',
+                    cache:false,
+                    data:$(form).serialize(),
+                    dataType:'json',
+                    beforeSend:function(XMLHttpRequest){
+                        $("#submitid1").addClass('disabled');
+                        $("#submitid1").button('loading');
+                        loading = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+                    },
+                    complete:function(XMLHttpRequest, textStatus){
+                        $("#submitid1").removeClass('disabled');
+                        $("#submitid1").button('reset');
+                        layer.close(loading);
+                    },
+
+                    success:function(data,textStatus){
+                        if(data.code == 1){
+                            var time = data.wait?(data.wait*1000):2000;
+                            layer.msg(data.msg?data.msg:'success!!', {icon: 1,time:time});
+                            setTimeout(function(){
+
+                                if(top.window != window){
+                                    if(typeof parent.window.iframefinish == 'function'){
+                                        parent.window.iframefinish()
+                                    }else if(typeof top.window.iframefinish == 'function'){
+                                        parent.window.iframefinish()
+                                    }else if(typeof top.window.reload == 'function'){
+                                        top.window.reload();
+                                    }else{
+                                        top.window.location.reload();
+                                    }
+                                }
+                            },time);
+                        }else{
+                            layer.msg(data.msg?data.msg:'出错了',{icon:2});
+                        }
+
+                    },
+                    error:function(XMLHttpRequest, textStatus, errorThrown){
+                        if(XMLHttpRequest.status == 404){
+                            alert('404');
+                        }
+                    }
+                });
+            }
+        });
+
+        require(['validate'],
+        function($){
+            // $("#text_1_input1").rules("add", {"required":true});$("#text_2_input1").rules("add", {"required":true});$("#text_3_input1").rules("add", {"required":true});$("#text_5_input1").rules("add", {"required":true});$("#text_6_input1").rules("add", {"required":false});$("#text_7_input1").rules("add", {"required":false});$("#text_8_input1").rules("add", {"required":false});$("#text_10_input1").rules("add", {"required":false});
+        })
+
+        $("#submitid1").click(function(){
+            $("#formid1").submit();
+        });
+    });
+</script>
+<{include file="jhy@public/footer"}>  

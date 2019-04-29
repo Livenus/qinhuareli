@@ -1,0 +1,152 @@
+<{include file="public/header"}>
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title" style=" padding-bottom: 0;">
+      
+            </div>
+            <div class="ibox-content">
+
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <!-- Example Events -->
+                        <div class="example-wrap">
+                            <div class="example">
+                   
+                                <!---search start-->
+                                <div class="right">
+                                    <form class="form-inline" id="search_from1" onsubmit='return false'>
+                                    
+                                    
+                                    </form>
+                                    
+                                </div>
+                                <!---search end---->
+                                <table id="dg" data-height="100%" data-mobile-responsive="true">
+                                </table>
+                            </div>
+                        </div>
+                        <!-- End Example Events -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+var install, uninstall,stat0,stat1;
+require(['bootstrap-table','layer'],function(a, layer){
+    //表格=========================================
+    $('#dg').bootstrapTable({
+        url:location.href,
+        method:'post',
+        queryParamsType: "limit",
+        queryParams:function(params){
+
+            return params;
+        },
+        contentType: 'application/json',
+        dataType: 'json',
+        sidePagination: "server", //表示服务端请求
+        pagination: true, //启动分页
+        pageNumber: 1, //当前第几页
+        pageSize: 20, //每页显示的记录数
+        pageList: [10, 15, 20], //记录数可选列表
+        dataField: 'data',
+        idField: "id",
+        columns:[
+            {title: "插件名",field:"name",align: "center",valign:"middle"},
+            {title: "插件码",field:"en_name",align: "center",valign:"middle"},
+            {title: "状态",field:"stat",align: "center",valign:"middle",formatter:function(value,row,index){
+            	if(value == 1) return '使用';
+            	else if(value == 0) return '禁用';
+            	else if(value == 'uninstall') return '未安装';
+ 
+            }},
+            {title:"操作",field: "n_do",align: "center",valign: "middle",formatter:function(value,row,index){
+            	if(row.stat == 1) return '<a href="javascript:stat(\''+row.en_name+'\', 0 );" class="btn btn-warning" title=""><span class="glyphicon glyphicon-ban-circle"></span>禁用</a>' + ' <a href="javascript:uninstall(\''+row.en_name+'\' );" class="btn btn-danger" title=""><span class="glyphicon glyphicon-trash"></span>卸载</a>';
+            	if(row.stat == 0) return '<a href="javascript:stat(\''+row.en_name+'\', 1 );" class="btn btn-success" title=""><span class="glyphicon glyphicon-ok-sign"></span>启用</a>' + ' <a href="javascript:uninstall(\''+row.en_name+'\' );" class="btn btn-danger" title=""><span class="glyphicon glyphicon-trash"></span>卸载</a>';
+            	if(row.stat == 'uninstall') return '<a href="javascript:install(\''+row.en_name+'\' );" class="btn btn-info" title=""><span class="glyphicon glyphicon-wrench"></span> 安装</a>';
+            	}
+            }
+            ],
+        responseHandler:function(res){
+          //远程数据加载之前,处理程序响应数据格式,对象包含的参数: 我们可以对返回的数据格式进行处理
+          //在ajax后我们可以在这里进行一些事件的处理
+          return res;
+        }
+
+    });
+    install = function(name, isuninstall){
+    	var url = "<{:url('admin/module/install')}>",
+    	msg = '确认安装？';
+    	if(isuninstall){
+    		url = "<{:url('admin/module/uninstall')}>";
+    		msg = '确认卸载？插件的数据将全部删除！';
+    	}
+    	
+    	layer.confirm(msg, {
+            btn: ['确认','取消'] //按钮
+          }, function(){
+	    	$.ajax({
+		    	url:url,
+		    	type:'post',
+		    	dataType:'json',
+		    	data:{name:name},
+		    	success:function(d){
+		    		if(d.code == '1'){
+		    			location.href=location.href;
+		    		}else{
+		    			layer.msg(d.msg?d.msg:'出错了');
+		    		}
+		    	},
+		    	error:function(){
+		    		alert('网络错误 ');
+		    	}
+	    		
+	    	});
+        	  
+          })
+    };
+    uninstall = function(name){
+    	install(name, true);
+    };
+    
+    stat = function(name, stat){
+    	var msg='';
+    	if(stat == 0){
+    		var url = "<{:url('admin/module/stat0')}>";
+    		msg = '确定禁用插件？';
+    	}else if(stat == 1){
+    		var url = "<{:url('admin/module/stat1')}>";
+    		msg = '确定启用插件？';
+    	}else{
+    		return ;
+    	}
+    	
+    	layer.confirm(msg, {
+            btn: ['确认','取消'] //按钮
+          }, function(){
+	    	$.ajax({
+		    	url:url,
+		    	type:'post',
+		    	dataType:'json',
+		    	data:{name:name},
+		    	success:function(d){
+		    		if(d.code == '1'){
+		    			location.href=location.href;
+		    		}else{
+		    			layer.msg(d.msg?d.msg:'出错了');
+		    		}
+		    	},
+		    	error:function(){
+		    		alert('网络错误 ');
+		    	}
+	    		
+	    	});
+        	  
+          })
+    }
+});
+
+</script>
+<{include file="public/footer"}>

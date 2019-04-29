@@ -1,0 +1,537 @@
+<{include file="user/Public_header"}>
+<{load href='/addons/apidoc/common.css'}>
+<div id="wrapper">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="javascript:void(0);">
+            当前项目:<{$projinfo['title']}>        </a>
+    </div>
+    <!-- /.navbar-header -->
+    <ul class="nav navbar-top-links navbar-right">
+
+        <li class="dropdown">
+            <a class="dropdown-toggle" href="/project/select.html">
+                <i class="fa fa fa-random fa-fw"></i> 切换项目
+            </a>
+        </li>
+
+        <!-- /.dropdown -->
+        <li class="dropdown js_notifyDropdown">
+
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">
+        <i class="fa fa-bell fa-fw"></i><span class="badge js_notifyNum">0</span> <i class="fa fa-caret-down"></i>
+    </a>
+
+    
+
+            <!-- /.dropdown-alerts -->
+        </li>
+
+        <!-- /.dropdown -->
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                jhy  <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-user">
+                <li><a href="/project/search.html"><i class="fa fa-search fa-fw"></i> 搜索项目</a>
+                </li>
+
+                <li><a href="#" data-toggle="modal" data-target="#js_settingProfileModal"><i class="fa fa-user fa-fw"></i> 个人设置</a>
+                </li>
+                                <li><a href="/admin.html"><i class="fa fa-gear fa-fw"></i> 管理中心</a>
+                </li>
+                                <li><a target="_blank" href="http://www.phprap.com/doc/index.html"><i class="fa fa-file-text fa-fw"></i> 帮助文档</a>
+                </li>
+                <li class="divider"></li>
+                <li><a class="js_logoutBtn" href="#"><i class="fa fa-sign-out fa-fw"></i> 退出登录</a>
+                </li>
+            </ul>
+            <!-- /.dropdown-user -->
+        </li>
+        <!-- /.dropdown -->
+    </ul>
+    <!-- /.navbar-top-links -->
+    
+    <div class="navbar-default sidebar" role="navigation">
+    <div class="sidebar-nav navbar-collapse">
+
+        <ul class="nav" id="side-menu">
+
+        </ul>
+    </div>
+    <!-- /.sidebar-collapse -->
+</div>
+</nav>
+	<{//api}>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-header">
+                    <h1>项目主页 </h1>
+                    <!-- 
+                    <div class="opt-btn">
+                         <a href="javascript:void(0);" class="btn hidden-xs btn-sm btn-success js_addProjectBtn" data-toggle="tooltip" title="编辑项目" data-placement="bottom" data-id="2"><i class="fa fa-fw fa-edit"></i>编辑</a>
+                        
+                         <a href="/project/export.html?id=FSSyJzxSSj" class="btn hidden-xs btn-sm btn-warning" data-toggle="tooltip" title="导出HTML" data-placement="bottom"><i class="fa fa-fw fa-download"></i>导出</a>
+                   </div>
+                    
+                     -->
+                </div>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+
+            <div class="col-lg-12">
+
+                <div class="panel panel-default">
+
+                    
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#home" data-toggle="tab">项目主页</a></li>
+    <li class=""><a href="#member" data-toggle="tab">项目成员</a></li>
+    <li class=""><a href="#dbdd" data-toggle="tab">数据字典</a></li>
+    <li class=""><a href="#dt"  data-toggle="tab">项目动态</a></li>
+</ul>
+<div class="tab-content">
+                    <div role="tabpanel"  class="tab-pane panel-body active" id="home">
+                        <p class="text-muted"><label>项目名称：</label><{$projinfo['title']}></p>
+                        <p class="text-muted"><label>搜索状态：</label><{if $projinfo['allow_search']==1}>允许<{else /}>禁止<{/if}></p>
+                        <p class="text-muted"><label>生产域名：</label><code><{$projinfo['url_product']}></code></p>
+                        <p class="text-muted"><label>开发域名：</label><code><{$projinfo['url_develop']}></code></p>
+                    </div>
+                    
+                    <div role="tabpanel"  class="tab-pane panel-body" id="member">
+                     member
+                    </div>
+                    <div role="tabpanel"  class="tab-pane panel-body" id="dbdd">
+                     dbdd
+                    </div>
+                    <div role="tabpanel"  class="tab-pane panel-body" id="dt">
+                     dbdd
+                    </div>
+                    <!-- /.panel-body -->
+</div>           
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+
+        <!-- /.row -->
+
+    </div>
+    <!-- /#page-wrapper -->
+
+
+
+
+</div>
+<!-- /#wrapper -->
+
+
+<hr>
+
+<script src="/static/js/require.js"></script>
+<script src="/static/js/requireconfig.js"></script>
+
+<script>
+	var openw,deldir,editdir,addapi;
+	var apiid = 0; //当前页面API 的ID
+	
+    var deps = [
+            "editormd", 
+                            "css!/static/js/plugins/markdown/css/editormd.css",
+                            "css!/static/js/plugins/markdown/lib/codemirror/codemirror.min.css",
+                    "/static/js/plugins/markdown/languages/en.js", 
+                    "/static/js/plugins/markdown/plugins/link-dialog/link-dialog.js",
+                    "/static/js/plugins/markdown/plugins/reference-link-dialog/reference-link-dialog.js",
+                    "/static/js/plugins/markdown/plugins/image-dialog/image-dialog.js",
+                    "/static/js/plugins/markdown/plugins/code-block-dialog/code-block-dialog.js",
+                    "/static/js/plugins/markdown/plugins/table-dialog/table-dialog.js",
+                    "/static/js/plugins/markdown/plugins/emoji-dialog/emoji-dialog.js",
+                    "/static/js/plugins/markdown/plugins/goto-line-dialog/goto-line-dialog.js",
+                    "/static/js/plugins/markdown/plugins/help-dialog/help-dialog.js",
+                    "/static/js/plugins/markdown/plugins/html-entities-dialog/html-entities-dialog.js", 
+                    "/static/js/plugins/markdown/plugins/preformatted-text-dialog/preformatted-text-dialog.js"
+            ];
+    require(deps,function(editormd){
+    	window.editormd=editormd;
+    	viewapi = function(id){
+    		_viewapi(id);	
+    	}
+    	
+		//数据字典
+		dbddview = function(id){
+			$.ajax({
+				url:"<{:url('apidoc/projdir/dbdd')}>",
+				dataType:'json',
+				method : 'post',
+				data:{projid:id},
+				success:function(d){
+					var content = d.data.content;
+					$("#dbdd").html('<textarea>'+content+'</textarea>');
+					
+        		    EditormddbddView = editormd.markdownToHTML('dbdd', {
+        		        htmlDecode      : "style,script,iframe|filterXSS",  // you can filter tags decode
+        		        emoji           : false,
+        		        taskList        : true,
+        		        tex             : true,  // 默认不解析
+        		        flowChart       : true,  // 默认不解析
+        		        sequenceDiagram : true,  // 默认不解析
+        		      });
+
+        		      //为所有table标签添加bootstap支持的表格类
+        		      $("table").addClass("table table-bordered table-hover");
+					
+					
+				}
+			});
+		}
+    	
+    	
+    });
+	//菜单---------------------------------------------------
+	require(['jquery_metisMenu','bootstrap'],function($){
+		
+		$('a[data-toggle="tab"]').on('show.bs.tab',function (e) {
+			
+			  if('#dbdd' == $(e.target).attr('href')){
+				  dbddview('<{$projinfo['id']}>');
+			  }
+			})
+		
+		$.ajax({
+			url:"<{:url('apidoc/projdir/list', ['projid'=>$projinfo['id']])}>",
+			type:'post',
+			dataType:'json',
+			data:{},
+			success:function(d){
+				if(d.code == '1'){
+			      var handle = function(menu, depth){
+			            if(!depth){
+	                        depth = 1;
+	                    }
+			            var depthclass="third";
+			          
+			            var html = '';
+			            if(depth == 1){
+			            	depthclass = 'second';
+	                        html = '<a class="J_menuItem" href="#"><i class=""></i> <span class="nav-label">'+menu.title+'</span>'+
+	                        '<span class="fa fa-fw arrow"></span>'+
+	                        '<span class="fa fa-fw fa-plus pull-right" onclick="addapi('+menu.id+')"></span>'+
+	                        '<span class="fa fa-fw fa-pencil pull-right" onclick="editdir('+menu.id+')"></span>'+
+	                        '<span class="fa fa-fw fa-trash-o pull-right" onclick="deldir('+menu.id+')"></span>'+
+	                        '</a>';
+			            	
+			            }
+			            if(depth == 2){
+			            	depthclass = 'third';
+			            	var cls = '';
+			            	if(menu.type == 'api') cls = 'fa fa-adn';
+			            	if(menu.type == 'doc') cls = 'fa fa-file-text-o';
+			                html = '<a href="javascript:viewapi('+menu.id+');"><i class="'+cls+'"></i><span class="nav-label">'+menu.title+'</span><span class="fa eye"></span></a>';
+			            }
+			            
+			            
+	                    if(menu.son){
+			                var html_s = '';
+			                $.each(menu.son, function(k, v){
+	                            //html_s += '<li><a class="J_menuItem" href="'+v.url+'"><i class="'+v.icon+'"></i>'+v.title+'</a></li>';
+	                            html_s += handle(v, depth+1);
+	                        });
+	                        html += '<ul class="nav nav-'+depthclass+'-level">' +html_s+ '</ul>';
+	                    }else{
+	                    }
+			            return '<li>' + html + '</li>';
+	               }
+			    
+			    
+			    
+					var html = '';
+					
+					$.each(d.data, function(k,v){
+			            html += handle(v);
+					});
+					
+					html = '<li>'+
+		                '<a href="<{:url('apidoc/projdir/view',['projid'=>$projinfo['id']])}>"><i class="fa fa-home fa-fw"></i> 项目主页</a>'+
+		                '</li>' + html;
+						
+					
+					html += '<li>' +
+		                '<a class="" data-id="2-0" data-title="" href="javascript:openw(\'<{:url('apidoc/projdir/adddir',['projid'=>$projinfo['id']])}>\');"><i class="fa fa-fw fa-plus"></i> 添加目录</a>'+
+		                '</li>';
+					$('#side-menu').append(html);
+					
+					// MetsiMenu
+					$('#side-menu').metisMenu();
+					//通过遍历给菜单项加上data-index属性
+					$(".J_menuItem").each(function (index) {
+						if (!$(this).attr('data-index')) {
+							$(this).attr('data-index', index);
+						}
+					});
+				}else{
+					alert('');	
+				}
+				
+			}
+		});		
+		
+		
+	});
+
+		require(['bootstrap-table','layer'],function(a, layer){
+			openw= function(url, title){
+				var url = url;
+				layer.open({
+		            type: 2,
+		            title: title?title:'新增',
+		            // closeBtn: 0, //不显示关闭按钮
+		            shade: [0.5],
+		            area: ['90%', '90%'],
+		            // offset: 'rb', //右下角弹出
+	//	            time: 2000, //2秒后自动关闭
+		             anim: 2,
+		             shift:2,
+		             maxmin: true, //开启最大化最小化按钮
+		            content: [url], //iframe的url，no代表不显示滚动条
+		            success:function(layero, index){
+		              
+		            },
+		            end: function(){ //此处用于演示
+		              
+		            }
+		          });
+			};
+			//删除目录
+			deldir = function(id){
+	                layer.confirm('确认删除？', {
+	                  btn: ['确认','取消'] //按钮
+	                }, function(){
+	                  layer.msg('删除中#'+id+'..', {icon: 1});
+	                  $.ajax({
+	                        url:"<{:url('apidoc/projdir/del')}>",
+	                        type:'post',
+	                        data:{'id':id,projid:"<{$projinfo['id']}>"},
+	                        dataType:'json',
+	                        success:function(d){
+	                            if(d.code == 1){
+	                                setTimeout(function(){top.window.location.reload()},(d.wait?d.wait:2)*1000);    
+	                            }else{
+	                                layer.msg( (d.msg?d.msg:'服务器暂时无法连接...'), {icon: 2});
+	                            }
+	                        },
+	                        error:function(d){
+	                            layer.msg('服务器暂时无法连接...', {icon: 2});
+	                        }
+	                    });
+
+	                });
+	             
+	            }
+			editdir = function(id){
+				var url = "<{:url('apidoc/Projdir/editdir', ['projid'=>$projinfo['id']])}>" + '&id=' +id;
+				openw(url,'修改');
+			}
+			addapi = function(id){
+				var url = "<{:url('apidoc/Api/add', ['projid'=>$projinfo['id']])}>" + '&id=' +id;
+				openw(url, '新加API')
+			}
+			
+			editfield = function(id){
+				var url= "<{:url('apidoc/Api/editfield')}>" + '?id=' +id;
+				openw(url, '修改');
+			}
+			reload = function(){
+				layer.closeAll('iframe');
+				if(apiid > 0){
+					viewapi(apiid);
+				}else{
+					location.reload();
+				}
+			}
+			
+			edit = function(id){
+				var url = "<{:url('apidoc/Api/edit', ['projid'=>$projinfo['id']])}>" + '&id=' +id;
+				openw(url, '修改API')
+			}
+
+            //删除接口
+            delinter = function(id){
+                    layer.confirm('确认删除该接口？', {
+                      btn: ['确认','取消'] //按钮
+                    }, function(){
+                      layer.msg('删除中#'+id+'..', {icon: 1});
+                      $.ajax({
+                            url:"<{:url('apidoc/projdir/delinter')}>",
+                            type:'post',
+                            data:{'id':id,projid:"<{$projinfo['id']}>"},
+                            dataType:'json',
+                            success:function(d){
+                                if(d.code == 1){
+                                    layer.msg( (d.msg?d.msg:'删除成功！'), {icon: 1});
+                                    setTimeout(function(){top.window.location.reload()},(d.wait?d.wait:2)*1000);    
+                                }else{
+                                    layer.msg( (d.msg?d.msg:'服务器暂时无法连接...'), {icon: 2});
+                                }
+                            },
+                            error:function(d){
+                                layer.msg('服务器暂时无法连接...', {icon: 2});
+                            }
+                        });
+
+                    });
+                 
+                }
+			
+			_viewapi = function(id){
+				apiid = id;
+				var $dom = $('#page-wrapper');
+				var html = '';
+				$.ajax({
+					url:"<{:url('apidoc/Api/view')}>",
+					type:'post',
+					dataType:'json',
+					data:{id:id},
+					success:function(data){
+						if(data.code == 1){
+							d=data.data;
+
+			        		var rfield = function(data, classtype){
+			        			var head = '';
+			        			if(classtype == 1) head = '请求字段';
+			        			if(classtype == 2) head = '响应字段';
+			        			if(classtype == 3) head = 'header字段';
+			        			var fieldhtml = '';
+			        			if(data){
+			        				$.each(data, function(k, v){
+				        				fieldhtml +='<tr>'+
+				        							'<td>'+v.name+'</td>'+
+				        							'<td>'+v.title+'</td>'+
+				        							'<td>'+(v.is_required?'是':'--')+'</td>'+
+				        							'<td>'+v.default_value+'</td>'+
+				        							'<td>'+v.intro+'</td>'+
+				        							'<td><a href="javascript:editfield('+v.id+');">【修改】</a><a href="javascript:delfield('+v.id+');">【删除】</a></td>'+
+				        							'</tr> ';
+			        					
+			        				});
+			        			}
+			        			
+				                var  s= '        <div class="row _api">'+
+				                        '<div class="col-lg-12">'+
+				                            '<div class="panel panel-default">'+
+				                                '<div class="panel-heading">'+
+				                                head+ ' <span onclick="addfield('+classtype+','+id+')"><i class="fa fa-add"></i>添加</span>'+
+				                                '</div>'+
+				                                '<!-- /.panel-heading -->'+
+				                                '<div class="panel-body">'+
+				                                 '   <div class="table-responsive">'+
+				                                  '      <table class="table table-striped table-bordered table-hover">'+
+				                                   '         <thead>'+
+				                                    '        <tr class="success">'+
+				                                     '           <th>参数名</th>'+
+				                                      '          <th>参数含意名</th>'+
+				                                       '         <th>是否必填</th>'+
+				                                       '         <th>默认值</th>'+
+				                                       '         <th>备注说明</th>'+
+				                                       '         <th>操作</th>'+
+				                                        '    </tr>'+
+				                                         '   </thead>'+
+				                                          '  <tbody>'+fieldhtml+
+				                                            
+	
+				                                            '</tbody>'+
+				                                        '</table>'+
+				                                    '</div>'+
+				                                '</div>'+
+				                            '</div>'+
+				                        '</div>'+
+				                    '</div>';
+			        			return s;
+			        		}
+			        		if(d.apiinfo.type == 'api'){
+                                var url = "<{:url('apidoc/debug/index',['apiid' => '"+d.apiinfo["id"]+"'])}>";
+								html = '<div class="row _api">'+
+	        					'<div class="col-lg-12">'+
+	            					'<div class="panel panel-default">'+
+	                					'<div class="panel-heading">接口详情<a href="javascript:edit('+id+');">修改</a>'+
+                                        '<a target="_blank" href="'+url+'">-|-调试接口</a>'+
+                                        '<a href="javascript:delinter('+id+');">-|-删除接口</a></div>'+
+	                					'<div class="panel-body">'+
+	                    					'<p class="text-muted"><label>接口名称：</label>'+d.apiinfo['title']+'</p>'+
+	                    					'<p class="text-muted"><label>所属模块：</label>'+d.apiinfo['dirname']+'</p>'+
+	                    					'<p class="text-muted"><label>请求类型：</label>'+d.apiinfo['method']+'</p>'+
+                                            '<p class="text-muted"><label>接口路径：</label>'+d.apiinfo['uri']+'</p>'+
+	                    					'<p class="text-muted"><label>接口描述：</label>'+d.apiinfo['intro']+'</p>'+
+	                					'</div>'+
+	            					'</div>'+
+	        				'</div>'+
+	    				'</div>';
+				        		html += rfield(d.field['1'], 1);
+				        		html += rfield(d.field['2'], 2);
+				        		html += rfield(d.field['3'], 3);
+				        		$dom.html(html)
+			        		}else if(d.apiinfo.type == 'doc'){
+
+				        			html = '<h3 id="page_title" class="_doc">'+d.apiinfo.title+'</h3><a href="javascript:edit('+id+');">【编辑】</a> <br/>';
+				        			html += '<div id="md1" class="_doc"><textarea style="display:none;">'+d.apiinfo.doc_content+'</textarea></div>';
+				        			$dom.html(html);
+			        			
+	
+
+        	                    
+        	                    	setTimeout(function(){
+					        		    EditormdView = editormd.markdownToHTML('md1', {
+					        		        htmlDecode      : "style,script,iframe|filterXSS",  // you can filter tags decode
+					        		        emoji           : false,
+					        		        taskList        : true,
+					        		        tex             : true,  // 默认不解析
+					        		        flowChart       : true,  // 默认不解析
+					        		        sequenceDiagram : true,  // 默认不解析
+					        		      });
+		
+					        		      //为所有table标签添加bootstap支持的表格类
+					        		      $("table").addClass("table table-bordered table-hover");
+        	                    		
+        	                    		
+        	                    	},200);
+        	                  
+			        	                        
+			        			
+			        			
+			        		}
+			        				
+		        			
+						}else{
+							alert(d.msg?d.msg:'出错了');
+						}
+					}
+				});
+        
+
+				
+			}
+			
+		});
+	
+		addfield = function(classtype,id){
+			var url="<{:url('apidoc/Api/addfield')}>"+'?classtype='+classtype + '&apiid=' + id;
+			openw(url, '新增字段')
+		}
+
+		
+		
+</script>
+
+<{include file="user/Public_footer"}>

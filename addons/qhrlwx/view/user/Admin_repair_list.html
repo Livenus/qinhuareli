@@ -1,0 +1,212 @@
+<{include file="jhy@public/header"}>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title" style=" padding-bottom: 0;">
+            <{php}>
+                $tpl = j_createcodeclass('jhy_formitem_pc');
+                $timehtml_s = $tpl->date(['field'=>'time_s','name'=>'报修开始时间'], '', 'time_s',1);
+                $timehtml_e = $tpl->date(['field'=>'time_e','name'=>'报修结束时间'], '', 'time_e',1);
+            <{/php}>
+            </div>
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <!-- Example Events -->
+                        <div class="example-wrap">
+                            <div class="example">
+                                <div class="hidden-xs" id="exampleTableEventsToolbar" role="group">
+                                    <button type="button" class="btn btn-primary" onclick="add('','/index.php?s=qhrlwx/admin_repair/add')">
+                                        <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>新增
+                                    </button> 
+                                </div>
+                                <!---search start-->
+                                <div class="right">
+                                    <form class="form-inline" id="search_from1" onsubmit='return false'>
+                                        <div class="form-group ">
+                                            <input placeholder="订单号" class="form-control" name="order_id">
+                                        </div>
+                                        <div class="form-group ">
+                                            <select class="form-control" name="community_id">
+                                                <option  value="">==小区==</option>
+                                                <{volist name="coms_info" id="vo"}>
+                                                    <option  value="<{$vo['id']}>"><{$vo['name']}></option>
+                                                <{/volist}>
+                                            </select>
+                                        </div>
+                                        <div class="form-group ">
+                                            <select class="form-control" name="stat">
+                                                <option  value="">==报修状态==</option>
+                                                <{volist name="stats" id="vo" key="k"}>
+                                                    <option  value="<{$k}>"><{$vo}></option>
+                                                <{/volist}>
+                                            </select>
+                                        </div>
+
+                                        <{$timehtml_s}>
+                                        <!-- 报修开始时间 -->
+                                        <{$timehtml_e}>
+                                        <!-- 报修结束时间 -->
+                                        <a href="javascript:list_search();" class="btn btn-primary btn-sm">搜索</a>
+                                    </form>
+                                </div>
+
+                                <!---search end---->
+                                <table id="dg" data-height="100%" data-mobile-responsive="true">
+                                </table>
+                            </div>
+                        </div>
+                        <!-- End Example Events -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        var del,edit,add,getQueryParams;
+        var iframdeindex, iframefinish;
+        require(['bootstrap-table','layer'],function(a, layer){
+            
+            //删除====================================
+            del = function(id, url){
+                console.log(url)
+                layer.confirm('确认删除？', {
+                  btn: ['确认','取消'] //按钮
+                }, function(){
+                    layer.msg('删除中#'+id+'..', {icon: 1});
+                    $.ajax({
+                        url:url + '/id/' + id,
+                        type:'get',
+                        dataType:'json',
+                        success:function(d){
+                            console.log(d)
+                            if(d.code == 1){
+                                setTimeout(function(){list_search();},(d.wait?d.wait:2)*1000);    
+                            }else{
+                                layer.msg( (d.msg?d.msg:'服务器暂时无法连接...'), {icon: 2});
+                            }
+
+                        },
+                        error:function(d){
+                            layer.msg('服务器暂时无法连接...', {icon: 2});
+                        }
+                    });
+                });
+            },
+
+            //编辑==================================
+            edit=function(id,url){
+                if(!id){
+                    layer.msg('页面出错了...',{icon:2});
+                }
+
+                //iframe窗
+                iframdeindex = layer.open({
+                  type: 2,
+                  title: '修改',
+                  // closeBtn: 0, //不显示关闭按钮
+                  shade: [0.5],
+                  area: ['90%', '90%'],
+                  // offset: 'rb', //右下角弹出
+//                  time: 2000, //2秒后自动关闭
+                   anim: 2,
+                   shift:2,
+                   maxmin: true, //开启最大化最小化按钮
+                  content: [url + '/id/' + id], //iframe的url，no代表不显示滚动条
+                  success:function(layero, index){
+
+                  },
+
+                  end: function(){ //此处用于演示
+
+                  }
+                });
+            },
+
+            //添加=======================================
+            add = function(un, url){
+                if(un) url = url + '/pid/' + un;                  
+                layer.open({
+                  type: 2,
+                  title: '新增',
+                  shade: [0.5],
+                  area: ['90%', '90%'],
+                  content: [url], //iframe的url，no代表不显示滚动条
+                  end: function(){ //此处用于演示
+
+                  }
+                });
+            },
+
+            list_search = function(){
+                q = getQueryParams();
+                $("#dg").bootstrapTable('refresh', {url: "/index.php/qhrlwx/admin_repair/list.html",query:q}); 
+            },
+
+            getQueryParams = function(){
+                var _params = $('#search_from1').serializeArray();
+                var params={};
+                $.each(_params, function(k, v){
+                    params[v.name]=v.value;
+                });
+                return params;
+            },
+
+            //关闭IFRAME刷新本页面数据
+            iframefinish = function(){
+                layer.closeAll('iframe');
+                list_search();
+            }
+
+            //表格=========================================
+            $('#dg').bootstrapTable({
+                url:'/index.php/qhrlwx/admin_repair/list.html',
+                method:'post',
+                queryParamsType: "limit",
+                queryParams:function(params){
+                    params.p = parseInt(params.offset/params.limit)+1;
+                    params = $.extend(params, getQueryParams());
+                    return params;
+                },
+
+                contentType: 'application/json',
+                dataType: 'json',
+                sidePagination: "server", //表示服务端请求
+                pagination: true, //启动分页
+                pageNumber: 1, //当前第几页
+                pageSize: 20, //每页显示的记录数
+                pageList: [10, 15, 20], //记录数可选列表
+                dataField: 'rows',
+                idField: "id",
+                columns:[
+
+                    {checkbox: true,align: 'center', valign: 'middle'},
+
+                    {title: "订单号",field:"order_id",align: "center",valign:"middle"},
+                    {title: "登录用户名",field:"username",align: "center",valign:"middle"},
+                    {title: "用户的报修房子",field:"house_id",align: "center",valign:"middle"},
+                    {title: "状态",field:"stat",align: "center",valign:"middle"},
+                    {title: "报修所在小区",field:"community_id",align: "center",valign:"middle"},
+                    {title: "报修时间",field:"create_time",align: "center",valign:"middle"},
+                    {title: "修理师傅",field:"repairname",align: "center",valign:"middle"},
+                    {title: "修理费用",field:"repair_money",align: "center",valign:"middle"},
+                    {title: "用户维修评级",field:"repair_grade",align: "center",valign:"middle"},
+                    {title: "付款时间",field:"pay_time",align: "center",valign:"middle"},
+                    
+                    {title:"操作",field: "n_do",align: "center",valign: "middle",formatter:function(value,row,index){
+                        return '<a href="javascript:edit(\''+row.id+'\',\'/index.php?s=qhrlwx/admin_repair/edit\');" class="btn btn-warning" title="修改"><span class="glyphicon glyphicon-edit"></span>修改</a> '
+                            +  '<a href="javascript:del(\''+row.id+'\',\'/index.php?s=qhrlwx/admin_repair/del\')" class="btn btn-warning" data-toggle="tooltip" title="删除"><span class="glyphicon glyphicon-remove"></span> 删除</a>';}}
+                    ],
+
+                responseHandler:function(res){
+                  //远程数据加载之前,处理程序响应数据格式,对象包含的参数: 我们可以对返回的数据格式进行处理
+                  //在ajax后我们可以在这里进行一些事件的处理
+                  return res;
+                }
+
+            });
+
+        });
+
+    </script>
+<{include file="jhy@public/footer"}>    

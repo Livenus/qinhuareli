@@ -1,0 +1,32 @@
+<{include file="jhy@public/header"}>
+<div class="wrapper wrapper-content animated fadeInRight">
+<div class="row" id="content">
+	<{volist name='myprojlist' id='vo'}>
+	<a target="_blank" href="<{:url('apidoc/projdir/view',['projid'=>$vo.id])}>">
+	<div class="col-md-3 view-project js_viewProject pannel-project">
+		<div class="panel panel-default">
+			<div class="panel-heading"><h3 class="panel-title"><{$vo.title}></h3></div>
+                <div class="panel-body">
+                    <p><{$vo.intro}></p>
+                </div>
+                <div class="panel-footer">
+                    
+                    <br>
+                    
+                </div>
+		</div>
+	</div>
+	</a>
+	<{/volist}>
+	</div>
+</div>
+</div>
+    <script>
+    	require(['jquery'],function($){
+    		$(function(){
+
+    		});
+    	});
+
+    </script>
+<{include file="jhy@public/footer"}>
